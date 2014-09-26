@@ -1,5 +1,7 @@
 #!/usr/bin/env python
+from clint.textui import puts
 from will.main import WillBot
+import settings
 
 
 """
@@ -11,8 +13,8 @@ Therefore, we'll provide an address!
 class MyWillBot(WillBot):
     def connect(self, *args, **kwargs):
         if 'address' not in kwargs:
-            import settings
             kwargs['address'] = (settings.HIPCHAT_SERVER, 5222)
+        puts('Connecting to %s' % kwargs['address'])
         WillBot.connect(self, *args, **kwargs)
 
 
