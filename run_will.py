@@ -11,6 +11,7 @@ Therefore, we'll provide an address!
 class MyWillBot(WillBot):
     def connect(*args, **kwargs):
         if 'address' not in kwargs:
+            import settings
             kwargs['address'] = (settings.HIPCHAT_SERVER, 5222)
         WillBot.connect(self, *args, **kwargs)
 
