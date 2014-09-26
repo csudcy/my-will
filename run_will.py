@@ -12,16 +12,9 @@ Therefore, we'll provide an address!
 """
 class MyWillBot(WillBot):
     def connect(self, *args, **kwargs):
-        if 'address' not in kwargs:
-            kwargs['address'] = ('chat.hipchat.com', 5222)
-        puts('Connecting to %s' % (kwargs['address'], ))
+        # Forcibly set the XMPP address
+        kwargs['address'] = ('chat.hipchat.com', 5222)
         WillBot.connect(self, *args, **kwargs)
-
-def pick_dns_answer(self, domain, port=None):
-    return domain, domain, port
-
-from sleekxmpp.xmlstream.xmlstream import XMLStream
-#XMLStream.pick_dns_answer = pick_dns_answer
 
 
 if __name__ == '__main__':
