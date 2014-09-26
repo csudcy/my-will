@@ -9,7 +9,7 @@ It seems that sleekxmpp resolves URLs to IPs if no address is provided to connec
 Therefore, we'll provide an address!
 """
 class MyWillBot(WillBot):
-    def connect(*args, **kwargs):
+    def connect(self, *args, **kwargs):
         if 'address' not in kwargs:
             import settings
             kwargs['address'] = (settings.HIPCHAT_SERVER, 5222)
