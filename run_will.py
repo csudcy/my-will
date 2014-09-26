@@ -21,7 +21,7 @@ def pick_dns_answer(self, domain, port=None):
     return domain, domain, port
 
 from sleekxmpp.xmlstream.xmlstream import XMLStream
-XMLStream.pick_dns_answer = pick_dns_answer
+#XMLStream.pick_dns_answer = pick_dns_answer
 
 
 if __name__ == '__main__':
