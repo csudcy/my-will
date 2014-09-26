@@ -14,7 +14,7 @@ class MyWillBot(WillBot):
     def connect(self, *args, **kwargs):
         if 'address' not in kwargs:
             kwargs['address'] = (settings.HIPCHAT_SERVER, 5222)
-        puts('Connecting to %s' % kwargs['address'])
+        puts('Connecting to %s' % (kwargs['address'], ))
         WillBot.connect(self, *args, **kwargs)
 
 
