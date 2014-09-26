@@ -17,6 +17,12 @@ class MyWillBot(WillBot):
         puts('Connecting to %s' % (kwargs['address'], ))
         WillBot.connect(self, *args, **kwargs)
 
+def pick_dns_answer(self, domain, port=None):
+    return domain, domain, port
+
+from sleekxmpp.xmlstream.xmlstream import XMLStream
+XMLStream.pick_dns_answer = pick_dns_answer
+
 
 if __name__ == '__main__':
     bot = MyWillBot()
