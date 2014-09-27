@@ -10,7 +10,7 @@ from will.plugin import WillPlugin
 from will.decorators import respond_to, periodic, hear, randomly, route, rendered_template, require_settings
 
 
-logger = logging.get_logger(__name__)
+logger = logging.getlogger(__name__)
 
 EMOTICONS_URL = "https://%(server)s/v2/emoticon?max-results=1000&auth_token=%(token)s"
 
