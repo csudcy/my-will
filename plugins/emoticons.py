@@ -1,5 +1,6 @@
 import functools
 import json
+import logging
 import random
 import re
 import traceback
@@ -8,6 +9,8 @@ from memoize import Memoizer
 from will.plugin import WillPlugin
 from will.decorators import respond_to, periodic, hear, randomly, route, rendered_template, require_settings
 
+
+logger = logging.get_logger(__name__)
 
 EMOTICONS_URL = "https://%(server)s/v2/emoticon?max-results=1000&auth_token=%(token)s"
 
@@ -20,7 +23,7 @@ def error_logger(func):
         try:
             return func(*args, **kwargs)
         except:
-            logging.critical('Error in {func}: \n{tb}'.format(
+            logger.critical('Error in {func}: \n{tb}'.format(
                 func=func,
                 tb=traceback.format_exc(),
             ))
@@ -62,13 +65,21 @@ class HipchatEmoticonsMixin(object):
 class EmoticonPlugin(WillPlugin, HipchatEmoticonsMixin):
 
     @respond_to("^emoticon me (?P<search>.*?)")
+    @error_logger
     def single(self, message, search=None):
-        "emoticon ___: Search hipchat emoticons for ___ and return a random one"
+        "emoticon me ___: Search hipchat emoticons for ___ and return a random one"
         emoticons = self.find_emoticons(search)
-        self.reply(message, random.choice(emoticons))
+        if emoticons:
+            self.reply(message, random.choice(emoticons))
+        else:
+            self.reply(message, 'I cannae find any captain!')
 
     @respond_to("^emoticons me (?P<search>.*?)")
+    @error_logger
     def list(self, message, search=None):
-        "emoticons ___: Search hipchat emoticons for ___ and return all of them"
+        "emoticons me ___: Search hipchat emoticons for ___ and return all of them"
         emoticons = self.find_emoticons(search)
-        self.reply(message, json.dumps(emoticons))
+        if emoticons:
+            self.reply(message, json.dumps(emoticons))
+        else:
+            self.reply(message, 'I cannae find any captain!')
