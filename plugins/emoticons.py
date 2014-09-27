@@ -26,7 +26,7 @@ def error_logger(func):
             ))
 
 
-class HipchatMixin(WillPlugin):
+class HipchatEmoticonsMixin(object):
 
     @memo(max_age=12*60*60)
     def get_emoticon_list(self):
@@ -59,7 +59,7 @@ class HipchatMixin(WillPlugin):
         )
 
 
-class EmoticonPlugin(WillPlugin, HipchatMixin):
+class EmoticonPlugin(WillPlugin, HipchatEmoticonsMixin):
 
     @respond_to("^emoticon (?P<search>.*?)")
     def single(self, message, search=None):
