@@ -72,7 +72,7 @@ class HipchatEmoticonsMixin(object):
 class EmoticonPlugin(WillPlugin, HipchatEmoticonsMixin):
 
     @respond_to("^emoticon me (?P<search>.*?)")
-    @error_logger
+    #@error_logger
     def single(self, message, search=None):
         "emoticon me ___: Search hipchat emoticons for ___ and return a random one"
         logging.critical('single start')
@@ -84,7 +84,7 @@ class EmoticonPlugin(WillPlugin, HipchatEmoticonsMixin):
         logging.critical('single end')
 
     @respond_to("^emoticons me (?P<search>.*?)")
-    @error_logger
+    #@error_logger
     def list(self, message, search=None):
         "emoticons me ___: Search hipchat emoticons for ___ and return all of them"
         logging.critical('list start')
