@@ -61,12 +61,14 @@ class HipchatEmoticonsMixin(object):
 
 class EmoticonPlugin(WillPlugin, HipchatEmoticonsMixin):
 
-    @respond_to("^emoticon (?P<search>.*?)")
+    @respond_to("^emoticon me (?P<search>.*?)")
     def single(self, message, search=None):
+        "emoticon ___: Search hipchat emoticons for ___ and return a random one"
         emoticons = self.find_emoticons(search)
         self.reply(message, random.choice(emoticons))
 
-    @respond_to("^emoticon list (?P<search>.*?)")
+    @respond_to("^emoticons me (?P<search>.*?)")
     def list(self, message, search=None):
+        "emoticons ___: Search hipchat emoticons for ___ and return all of them"
         emoticons = self.find_emoticons(search)
         self.reply(message, json.dumps(emoticons))
