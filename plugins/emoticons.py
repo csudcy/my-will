@@ -35,7 +35,6 @@ def error_logger(func):
 
 class HipchatEmoticonsMixin(object):
 
-    @error_logger
     @memo(max_age=12*60*60)
     def get_emoticon_list(self):
         """
