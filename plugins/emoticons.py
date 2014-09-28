@@ -38,6 +38,7 @@ class HipchatEmoticonsMixin(object):
         Find emoticons based on the given search string
         """
         emoticons = self.get_emoticon_list() or []
+        logging.critical(json.dumps(emoticons))
         if search:
             search = search.strip()
             if search:
