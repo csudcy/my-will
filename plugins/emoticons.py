@@ -31,8 +31,7 @@ class HipchatEmoticonsMixin(object):
         }
         headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
         response = requests.get(url, headers=headers)
-        data = response.read()
-        return json.loads(data)
+        return response.json()
 
     def find_emoticons(self, search=None):
         """
