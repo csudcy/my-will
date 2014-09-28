@@ -30,10 +30,12 @@ def error_logger(func):
                 func=func,
                 tb=traceback.format_exc(),
             ))
+    return _error_logger
 
 
 class HipchatEmoticonsMixin(object):
 
+    @error_logger
     @memo(max_age=12*60*60)
     def get_emoticon_list(self):
         """
@@ -56,7 +58,7 @@ class HipchatEmoticonsMixin(object):
         Find emoticons based on the given search string
         """
         logging.critical('find_emoticons start')
-        emoticons = self.get_emoticon_list()
+        emoticons = self.get_emoticon_list() or []
         if search:
             emoticons = filter(
                 emoticons,
@@ -72,7 +74,7 @@ class HipchatEmoticonsMixin(object):
 class EmoticonPlugin(WillPlugin, HipchatEmoticonsMixin):
 
     @respond_to("^emoticon me (?P<search>.*?)")
-    #@error_logger
+    @error_logger
     def single(self, message, search=None):
         "emoticon me ___: Search hipchat emoticons for ___ and return a random one"
         logging.critical('single start')
@@ -84,7 +86,7 @@ class EmoticonPlugin(WillPlugin, HipchatEmoticonsMixin):
         logging.critical('single end')
 
     @respond_to("^emoticons me (?P<search>.*?)")
-    #@error_logger
+    @error_logger
     def list(self, message, search=None):
         "emoticons me ___: Search hipchat emoticons for ___ and return all of them"
         logging.critical('list start')
