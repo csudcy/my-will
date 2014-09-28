@@ -42,12 +42,12 @@ class HipchatEmoticonsMixin(object):
             search = search.strip()
             if search:
                 emoticons = filter(
+                    lambda e: re.match(search, e['shortcut']),
                     emoticons,
-                    lambda e: re.match(search, e['shortcut'])
                 )
         return map(
+            lambda e: '(%s)' % e['shortcut'],
             emoticons,
-            lambda e: '(%s)' % e['shortcut']
         )
 
 
