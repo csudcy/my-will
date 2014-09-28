@@ -30,7 +30,7 @@ class HipchatEmoticonsMixin(object):
             "token": settings.V2_TOKEN
         }
         headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
-        response = requests.get(url, headers=headers, data=json.dumps(data))
+        response = requests.get(url, headers=headers)
         data = response.read()
         return json.loads(data)
 
@@ -54,7 +54,7 @@ class HipchatEmoticonsMixin(object):
 
 class EmoticonPlugin(WillPlugin, HipchatEmoticonsMixin):
 
-    @respond_to("^emoticon me(?P<search> .*?)")
+    @respond_to("^emoticon me(?P<search>.*?)")
     def single(self, message, search=None):
         "emoticon me ___: Search hipchat emoticons for ___ and return a random one"
         emoticons = self.find_emoticons(search)
@@ -63,7 +63,7 @@ class EmoticonPlugin(WillPlugin, HipchatEmoticonsMixin):
         else:
             self.reply(message, 'I cannae find any captain!')
 
-    @respond_to("^emoticons me(?P<search> .*?)")
+    @respond_to("^emoticons me(?P<search>.*?)")
     def list(self, message, search=None):
         "emoticons me ___: Search hipchat emoticons for ___ and return all of them"
         emoticons = self.find_emoticons(search)
