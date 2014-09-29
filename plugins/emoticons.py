@@ -39,7 +39,7 @@ class HipchatEmoticonsMixin(object):
         Find emoticons based on the given search string
         """
         emoticons = self.get_emoticon_list() or []
-        logging.critical(json.dumps(emoticons))
+        logging.critical('***** %s' % search)
         if search:
             search = search.strip()
             if search:
@@ -69,7 +69,6 @@ class EmoticonPlugin(WillPlugin, HipchatEmoticonsMixin):
         "emoticons me ___: Search hipchat emoticons for ___ and return all of them"
         emoticons = self.find_emoticons(search)
         if emoticons:
-            self.reply(message, json.dumps(emoticons))
+            self.reply(message, ','.join(emoticons))
         else:
             self.reply(message, 'I cannae find any captain!')
-
