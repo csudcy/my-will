@@ -1,9 +1,6 @@
-import functools
 import json
-import logging
 import random
 import re
-import traceback
 
 from memoize import Memoizer
 from will.plugin import WillPlugin
@@ -39,7 +36,6 @@ class HipchatEmoticonsMixin(object):
         Find emoticons based on the given search string
         """
         emoticons = self.get_emoticon_list() or []
-        logging.critical('***** %s' % search)
         if search:
             search = search.strip()
             if search:

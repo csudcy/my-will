@@ -1,1 +1,1 @@
-MODULE_COMMENT = "Custom plugins"
+MODULE_DESCRIPTION = "My plugins"
