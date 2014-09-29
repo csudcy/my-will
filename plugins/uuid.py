@@ -7,5 +7,8 @@ from will.decorators import respond_to, periodic, hear, randomly, route, rendere
 class UUIDPlugin(WillPlugin):
 
     @respond_to("^uuid me")
-    def single(self, message):
+    def uuid_me(self, message):
+        """
+        uuid me: Generate a UUID v4
+        """
         self.reply(message, str(uuid.uuid4()))
