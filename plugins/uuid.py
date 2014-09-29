@@ -4,7 +4,7 @@ from will.plugin import WillPlugin
 from will.decorators import respond_to, periodic, hear, randomly, route, rendered_template, require_settings
 
 
-class EmoticonPlugin(WillPlugin, HipchatEmoticonsMixin):
+class UUIDPlugin(WillPlugin):
 
     @respond_to("^uuid me")
     def single(self, message):
