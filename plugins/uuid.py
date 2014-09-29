@@ -8,4 +8,4 @@ class UUIDPlugin(WillPlugin):
 
     @respond_to("^uuid me")
     def single(self, message):
-        self.reply(message, uuid.uuid4())
+        self.reply(message, str(uuid.uuid4()))
