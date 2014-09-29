@@ -56,9 +56,6 @@ PLUGINS = [
     "will.plugins.productivity",
     "will.plugins.web",
 
-    # ALl will plugins?
-    "will.plugins",
-
     # All plugins in your project.
     "plugins",
 ]
