@@ -235,7 +235,7 @@ class HangmanPlugin(WillPlugin):
         if guess in self.word:
             guesses_right.append(guess)
             # Update word revealed
-            self.word_revealed = ' '.join([w for w in self.word if w in self.guesses_right else '_'])
+            self.word_revealed = ' '.join([w else '_' for w in self.word if w in self.guesses_right])
         else:
             guesses_wrong.append(guess)
 
