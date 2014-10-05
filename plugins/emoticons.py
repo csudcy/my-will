@@ -39,6 +39,7 @@ class HipchatEmoticonsMixin(object):
         if search:
             search = search.strip()
             if search:
+                search = '.*%s.*' % search
                 emoticons = filter(
                     lambda e: re.match(search, e['shortcut']),
                     emoticons,
@@ -51,7 +52,7 @@ class HipchatEmoticonsMixin(object):
 
 class EmoticonPlugin(WillPlugin, HipchatEmoticonsMixin):
 
-    @respond_to("^emoticon me(?: (?P<search>.*?))$")
+    @respond_to("^emoticon me(?P<search>.*?)$")
     def emoticon_me(self, message, search=None):
         "emoticon me ___: Search hipchat emoticons for ___ and return a random one"
         emoticons = self.find_emoticons(search)
@@ -60,7 +61,7 @@ class EmoticonPlugin(WillPlugin, HipchatEmoticonsMixin):
         else:
             self.reply(message, 'I cannae find any captain!')
 
-    @respond_to("^emoticons me(?: (?P<search>.*?))$")
+    @respond_to("^emoticons me(?P<search>.*?)$")
     def emoticons_me(self, message, search=None):
         "emoticons me ___: Search hipchat emoticons for ___ and return all of them"
         emoticons = self.find_emoticons(search)
