@@ -1,6 +1,6 @@
 import random
 import re
-import json
+from dict_mixin import DictMixin
 
 HANGMAN_STATES = [
     [
@@ -165,11 +165,10 @@ STATUS_TEMPLATE = """
     Guessed: {guesses_wrong}
 """
 
-class HangmanMixin(object):
+class HangmanMixin(DictMixin):
     def __init__(self):
         # Load the dictionary
-        with open('/app/plugins/dict/dictionary.json', 'r') as f:
-            self.dict = json.load(f)
+        DictMixin.__init__(self)
         # ditch the shit words
         bad_keys = [k for k in self.dict if not re.match('^[a-zA-Z]{4,10}$', k)]
         for k in bad_keys:
@@ -301,7 +300,7 @@ if __name__ == '__main__':
     print hm.guess('l')
     print hm.guess('u')
     for letter in 'abcdefghijklmnopqrstuvwxyz':
-        if hm.status() == 'PLAYING':
-            hm.guess(letter)
+        if hm.state == 'PLAYING':
+            print hm.guess(letter)
         else:
             break
