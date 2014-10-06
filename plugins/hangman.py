@@ -169,6 +169,7 @@ class HangmanMixin(object):
         # Setup a new game
         self.state = 'PLAYING'
         self.word = random.choice(self.words)
+        self.word_revealed = ('_ ' * len(self.word)).strip()
         self.guesses_right = []
         self.guesses_wrong = []
 
@@ -186,9 +187,9 @@ class HangmanMixin(object):
         # Prepare the output
         output = STATUS_TEMPLATE.format(
             board=HANGMAN_STATES[len(self.guesses_wrong)],
-            word='word',
-            guesses_right=', '.join(guesses_right),
-            guesses_wrong=', '.join(guesses_wrong),
+            word=self.word_revealed,
+            guesses_right=', '.join(self.guesses_right),
+            guesses_wrong=', '.join(self.guesses_wrong),
         )
 
         # Check if the game is over
@@ -218,12 +219,16 @@ class HangmanMixin(object):
         Make a guess
         """
         # Check we're currently playing
+        if self.state == 'WON':
+            return 'It looks like you won already - congratulations!'
+        if self.state == 'LOST':
+            return 'Sorry, it looks like you already lost :('
         if self.state != 'PLAYING':
             return 'Sorry, it doesn\'t look like you\'re currently playing a game?'
 
         # Check the input
         guess = guess.strip().upper()
-        if not re.match('^[A-Z]$'):
+        if not re.match('^[A-Z]$', guess):
             return 'That\'s not a letter!'
 
         # Check it hasnt been tried before
@@ -245,7 +250,7 @@ class HangmanMixin(object):
             self.guesses_wrong.append(guess)
 
             # Check if they lost
-            if len(self.guesses_wrong) == len(HANGMAN_STATES):
+            if len(self.guesses_wrong) + 1 == len(HANGMAN_STATES):
                 self.state = 'LOST'
 
         return self.get_status()
