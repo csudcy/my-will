@@ -1,4 +1,3 @@
-import os
 import random
 import re
 
@@ -168,7 +167,7 @@ STATUS_TEMPLATE = """
 class HangmanMixin(object):
     def __init__(self):
         # Load the dictionary
-        with open(os.path.abspath('./dict/words'), 'r') as f:
+        with open(os.path.abspath('/app/plugins/dict/words'), 'r') as f:
             contents = f.read()
         words = contents.splitlines()
         self.words = [word.upper() for word in words if re.match('^[a-zA-Z]{4,10}$', word)]
