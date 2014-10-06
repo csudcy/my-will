@@ -1,3 +1,8 @@
+dictionary.json from https://github.com/adambom/dictionary/
+
+Licensed under the MIT License.
+
+
 EOWL Words list from http://dreamsteep.com/projects/the-english-open-word-list.html
 
 LICENSE:
