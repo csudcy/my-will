@@ -1,7 +1,7 @@
 from will.plugin import WillPlugin
 from will.decorators import respond_to, periodic, hear, randomly, route, rendered_template, require_settings
 
-from hangman_mixin import HangmanMixin
+from mixins.hangman_mixin import HangmanMixin
 
 
 class HangmanPlugin(WillPlugin, HangmanMixin):

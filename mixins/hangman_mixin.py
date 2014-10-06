@@ -214,11 +214,11 @@ class HangmanMixin(DictMixin):
         )
 
         # Check if the game is over
-        if self.state == 'WON':
-            output += '\n YOU WON! \n'
-            output += '{word}: {definition}'.format(word=self.word, definition=self.dict[self.word])
-        elif self.state == 'LOST':
-            output += '\n GAME OVER! The word was %s \n' % self.word
+        if self.state != 'PLAYING':
+            if self.state == 'WON':
+                output += '\n YOU WON! \n'
+            elif self.state == 'LOST':
+                output += '\n GAME OVER! \n'
             output += '{word}: {definition}'.format(word=self.word, definition=self.dict[self.word])
 
         # Send back the message
