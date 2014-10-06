@@ -141,7 +141,7 @@ STATUS_TEMPLATE = """
     Wrong guesses: {guesses_wrong}
 """
 
-SECRETS_TEMPLATE = """
+SECRETS_TEMPLATE = u"""
     word_count    : {word_count}
     state         : {state}
     word          : {word}
@@ -151,8 +151,7 @@ SECRETS_TEMPLATE = """
 """
 
 
-STATUS_TEMPLATE = """
-    {board[0]}
+STATUS_TEMPLATE = u"""    {board[0]}
     {board[1]}
     {board[2]}
     {board[3]}
@@ -161,8 +160,8 @@ STATUS_TEMPLATE = """
     {board[6]}
     {board[7]}
 
-    Word: {word}
-    Guessed: {guesses_wrong}
+    {word}
+    {guesses_wrong}
 """
 
 class HangmanMixin(DictMixin):
@@ -215,11 +214,15 @@ class HangmanMixin(DictMixin):
 
         # Check if the game is over
         if self.state != 'PLAYING':
+            output += '\n        '
             if self.state == 'WON':
-                output += '\n YOU WON! \n'
+                output += 'YOU WON!'
             elif self.state == 'LOST':
-                output += '\n GAME OVER! \n'
-            output += '{word}: {definition}'.format(word=self.word, definition=self.dict[self.word])
+                output += 'GAME OVER!'
+            output += '\n\n    {word} : {definition}'.format(
+                word=self.word.title(),
+                definition=self.dict[self.word]
+            )
 
         # Send back the message
         return output
@@ -250,33 +253,54 @@ class HangmanMixin(DictMixin):
             return 'Sorry, it doesn\'t look like you\'re currently playing a game?'
 
         # Check the input
-        guess = guess.strip().upper()
-        if not re.match('^[A-Z]$', guess):
-            return 'That\'s not a letter!'
+        output = []
+        for letter in guess.upper():
+            # Check this is a letter we're interested in
+            letter = letter.strip()
+            if not letter:
+                continue
+            if not re.match('^[A-Z]$', letter):
+                output.append(
+                    '{letter} is not a letter!'.format(
+                        letter=letter,
+                    )
+                )
+                continue
 
-        # Check it hasnt been tried before
-        if guess in self.guesses_right or guess in self.guesses_wrong:
-            return 'You already tried {guess}!'.format(
-                guess=guess,
-            )
+            # Check it hasnt been tried before
+            if letter in self.guesses_right or letter in self.guesses_wrong:
+                output.append(
+                    'You already tried {letter}!'.format(
+                        letter=letter,
+                    )
+                )
+                continue
 
-        if guess in self.word:
-            self.guesses_right.append(guess)
+            # Check if it's right or wrong
+            if letter in self.word:
+                self.guesses_right.append(letter)
 
-            # Update word revealed
-            self.word_revealed = ' '.join([w if w in self.guesses_right else '_' for w in self.word])
+                # Update word revealed
+                self.word_revealed = ' '.join([w if w in self.guesses_right else '_' for w in self.word])
 
-            # Check if they won
-            if not '_' in self.word_revealed:
-                self.state = 'WON'
-        else:
-            self.guesses_wrong.append(guess)
+                # Check if they won
+                if not '_' in self.word_revealed:
+                    self.state = 'WON'
+            else:
+                self.guesses_wrong.append(letter)
 
-            # Check if they lost
-            if len(self.guesses_wrong) + 1 == len(HANGMAN_STATES):
-                self.state = 'LOST'
+                # Check if they lost
+                if len(self.guesses_wrong) + 1 == len(HANGMAN_STATES):
+                    self.state = 'LOST'
 
-        return self.get_status()
+            # Check we're still playing
+            if self.state != 'PLAYING':
+                break
+
+        # Show the final status
+        output.append(self.get_status())
+
+        return '\n'.join(output)
 
 if __name__ == '__main__':
     hm = HangmanMixin()
@@ -287,20 +311,5 @@ if __name__ == '__main__':
     print hm.get_secrets()
     print hm.guess('1')
     print hm.guess('e')
-    print hm.guess('t')
-    print hm.guess('a')
-    print hm.guess('o')
-    print hm.guess('i')
-    print hm.guess('n')
-    print hm.guess('s')
-    print hm.guess('c')
-    print hm.guess('h')
-    print hm.guess('r')
-    print hm.guess('d')
-    print hm.guess('l')
-    print hm.guess('u')
-    for letter in 'abcdefghijklmnopqrstuvwxyz':
-        if hm.state == 'PLAYING':
-            print hm.guess(letter)
-        else:
-            break
+    print hm.guess('etaoin schrdlu')
+    print hm.guess('abcdefghijklmnopqrstuvwxyz')
