@@ -6,12 +6,50 @@ My willbot implementation
 DONE:
  * Emoticons
  * Generate a UUID
+ * Hangman
 
 TODO:
- * In a specific room, set a random topic every 10 minutes from chatoms
- * Rage
- * Hodor
- * Games
- * Lunch
+ * Text FX:
+  * Ascii me
+  * Lorem ipsum
+  * Hodor
+ * Lists & searching (admin through web?):
+  * Board Games
+  * Lunch
+ * Search internet sites:
+  * Sporkle
+  * YouTube
+  * Wiktionary
+  * Wikipedia
+  * XKCD
+  * Dilbert
+ * Basic responders:
+  * War games
+  * Word of the day
+  * Hello
+  * Goodbye
+ * Random:
+  * In a specific room, set a random topic every 10 minutes from chatoms
+  * Rage
+  * Random rage
+  * Random refusal to work
+  * Willisms
+  * Restart
+
+TOIMPROVE:
+ * Hangman
+  * Game per room
+  * Persist over restart
+  * Guess multiple letters/whole word
+  * Show number of possible words matching given guesses
+  * Keep stats
+   * Word length vs. guesses taken
+   * Correct vs. incorrect guesses
+   * Words that have been used (& their definitions)
+   * Actual letter frequency vs. guessed letter frequency
+   * Correct guesses per person vs. incorrect
+
+TOFIX:
  * Respond to invitations
- * Dilbert
+ * Cut down commands listed in help
+ * Heroku/github checking
