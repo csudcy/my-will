@@ -1,5 +1,6 @@
 import random
 import re
+import json
 
 HANGMAN_STATES = [
     [
@@ -167,11 +168,12 @@ STATUS_TEMPLATE = """
 class HangmanMixin(object):
     def __init__(self):
         # Load the dictionary
-        with open('/app/plugins/dict/words', 'r') as f:
-            contents = f.read()
-        words = contents.splitlines()
-        self.words = [word.upper() for word in words if re.match('^[a-zA-Z]{4,10}$', word)]
-
+        with open('/app/plugins/dict/dictionary.json', 'r') as f:
+            self.dict = json.load(f)
+        # ditch the shit words
+        bad_keys = [k for k in self.dict if not re.match('^[a-zA-Z]{4,10}$', k)]
+        for k in bad_keys:
+            self.dict.pop(k)
         # Game variables
         self.state = 'NOT_PLAYING'
         self.word = None
@@ -188,7 +190,7 @@ class HangmanMixin(object):
 
         # Setup a new game
         self.state = 'PLAYING'
-        self.word = random.choice(self.words)
+        self.word = random.choice(self.dict.keys())
         self.word_revealed = ('_ ' * len(self.word)).strip()
         self.guesses_right = []
         self.guesses_wrong = []
@@ -215,8 +217,10 @@ class HangmanMixin(object):
         # Check if the game is over
         if self.state == 'WON':
             output += '\n YOU WON! \n'
+            output += '{word}: {definition}'.format(word=self.word, definition=self.dict[self.word])
         elif self.state == 'LOST':
             output += '\n GAME OVER! The word was %s \n' % self.word
+            output += '{word}: {definition}'.format(word=self.word, definition=self.dict[self.word])
 
         # Send back the message
         return output
@@ -226,7 +230,7 @@ class HangmanMixin(object):
         Reveal all my inner secrets...
         """
         return SECRETS_TEMPLATE.format(
-            word_count=len(self.words),
+            word_count=len(self.dict),
             state=self.state,
             word=self.word,
             word_revealed=self.word_revealed,
@@ -296,3 +300,8 @@ if __name__ == '__main__':
     print hm.guess('d')
     print hm.guess('l')
     print hm.guess('u')
+    for letter in 'abcdefghijklmnopqrstuvwxyz':
+        if hm.status() == 'PLAYING':
+            hm.guess(letter)
+        else:
+            break
