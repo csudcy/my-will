@@ -216,7 +216,7 @@ class HangmanMixin(object):
         if self.state == 'WON':
             output += '\n YOU WON! \n'
         elif self.state == 'LOST':
-            output += '\n GAME OVER! \n'
+            output += '\n GAME OVER! The word was %s \n' % self.word
 
         # Send back the message
         return output

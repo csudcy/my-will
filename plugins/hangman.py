@@ -12,14 +12,14 @@ class HangmanPlugin(WillPlugin, HangmanMixin):
     @respond_to("^hangman me$")
     def hangman_me(self, message):
         """
-        Start a new game of hangman
+        hangman me: Start a new game of hangman
         """
         self.reply(message, self.new_game())
 
     @respond_to("^hangman status$")
     def hangman_status(self, message):
         """
-        Check the progress of the current game
+        hangman status: Check the progress of the current game
         """
         self.reply(message, self.get_status())
 
@@ -32,6 +32,6 @@ class HangmanPlugin(WillPlugin, HangmanMixin):
     @respond_to("^hangman guess (?P<guess>.)$")
     def hangman_guess(self, message, guess):
         """
-        Make a guess in the current hangman game
+        hangman guess _: Make a guess in the current hangman game
         """
         return self.reply(message, self.guess(guess))
