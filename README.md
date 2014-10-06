@@ -34,7 +34,6 @@ TODO:
   * Random rage
   * Random refusal to work
   * Willisms
-  * Restart
 
 TOIMPROVE:
  * Hangman
@@ -51,5 +50,7 @@ TOIMPROVE:
 
 TOFIX:
  * Respond to invitations
- * Cut down commands listed in help
- * Heroku/github checking
+
+FAILED:
+ * Restart
+  * Will catches ALL exceptions. I tried monkey patching the listener to die but it seems to auto restart just that thread.
