@@ -1,4 +1,4 @@
-dictionary.json from https://github.com/adambom/dictionary/
+dictionary.json from https://github.com/kazazes/dictionary/
 
 Licensed under the MIT License.
 
