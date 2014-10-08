@@ -37,7 +37,7 @@ TODO:
 
 TOIMPROVE:
  * Hangman
-  * Game per room
+  * Make it look better
   * Persist over restart
   * Keep stats
    * Word length vs. guesses taken
