@@ -143,7 +143,7 @@ class HangmanMixin(DictMixin):
         # Load the dictionary
         DictMixin.__init__(self)
         # ditch the shit words
-        bad_keys = [k for k in self.dict if not re.match('^[a-zA-Z]{4,10}$', k)]
+        bad_keys = [k for k in self.dict if not re.match('^[a-zA-Z]{4,20}$', k)]
         for k in bad_keys:
             self.dict.pop(k)
         # Game variables
@@ -181,11 +181,14 @@ class HangmanMixin(DictMixin):
         # Find how many words match
         revealed_re = '^%s$' % self.word_revealed
         revealed_re = revealed_re.replace(' ', '')
-        already_guessed_re = '[^%s%s]' % (
-            ''.join(self.guesses_right),
-            ''.join(self.guesses_wrong),
-        )
-        revealed_re = revealed_re.replace('_', already_guessed_re)
+        if self.guesses_right or self.guesses_wrong:
+            remaining_letters_re = '[^%s%s]' % (
+                ''.join(self.guesses_right),
+                ''.join(self.guesses_wrong),
+            )
+        else:
+            remaining_letters_re == '.'
+        revealed_re = revealed_re.replace('_', remaining_letters_re)
         possible_words = [k for k in self.dict if re.match(revealed_re, k)]
 
         # Prepare the output
