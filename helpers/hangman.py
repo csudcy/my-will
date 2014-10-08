@@ -126,7 +126,9 @@ SECRETS_TEMPLATE = u"""
 """
 
 
-STATUS_TEMPLATE = u"""    {board[0]}
+STATUS_TEMPLATE = u"""
+<pre style="line-height: 1.0;">
+    {board[0]}
     {board[1]}
     {board[2]}
     {board[3]}
@@ -134,10 +136,23 @@ STATUS_TEMPLATE = u"""    {board[0]}
     {board[5]}
     {board[6]}
     {board[7]}
-
+</pre>
+<br/>
+<pre>
     {word}
     {guesses_wrong}
+
     Could be {possible_words} of {total_words} words I know
+</pre>
+"""
+
+FINISHED_TEMPLATE = u"""
+<br/>
+<pre>
+        {message}
+
+{definition}
+</pre>
 """
 
 # Load the dictionary
@@ -205,13 +220,13 @@ class Hangman(object):
 
         # Check if the game is over
         if self.state != 'PLAYING':
-            output += '\n        '
             if self.state == 'WON':
-                output += 'YOU WON!'
+                message = 'YOU WON!'
             elif self.state == 'LOST':
-                output += 'GAME OVER!'
-            output += '\n\n    {definition}'.format(
-                definition=dictionary.get_definition(self.word)
+                message = 'GAME OVER!'
+            output += FINISHED_TEMPLATE.format(
+                message=message,
+                definition=dictionary.get_definition(self.word),
             )
 
         # Send back the message

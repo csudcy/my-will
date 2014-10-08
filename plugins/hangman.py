@@ -28,7 +28,7 @@ class HangmanPlugin(WillPlugin):
         hangman me: Start a new game of hangman
         """
         game = self.get_game(message)
-        self.say('/code '+game.new_game(), message=message)
+        self.say(game.new_game(), message=message, html=True)
 
     @respond_to("^hangman status$")
     def hangman_status(self, message):
@@ -36,14 +36,14 @@ class HangmanPlugin(WillPlugin):
         hangman status: Check the progress of the current game
         """
         game = self.get_game(message)
-        self.say('/code '+game.get_status(), message=message)
+        self.say(game.get_status(), message=message, html=True)
 
     @respond_to("^hangman reveal$")
     def hangman_reveal(self, message):
         # Reveal hangmans inner secrets
         game = self.get_game(message)
         self.reply(message, 'Here are all my secrets:')
-        self.say('/code '+game.get_secrets(), message=message)
+        self.say(game.get_secrets(), message=message, html=True)
 
     @respond_to("^hangman guess (?P<guess>.*)$")
     def hangman_guess(self, message, guess):
@@ -51,4 +51,13 @@ class HangmanPlugin(WillPlugin):
         hangman guess ___: Make a guess in the current hangman game
         """
         game = self.get_game(message)
-        return self.say('/code '+game.guess(guess), message=message)
+        self.say(game.guess(guess), message=message, html=True)
+
+    @respond_to("^hangman cheat (?P<guess>.*)$")
+    def hangman_cheat(self, message, guess):
+        game = self.get_game(message)
+        for letter in guess:
+            output = game.guess(letter)
+            if game.state != 'PLAYING':
+                break
+        self.say(output, message=message, html=True)
