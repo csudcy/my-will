@@ -1,6 +1,6 @@
 import random
 import re
-from dict_mixin import Dictionary
+from dictionary import Dictionary
 
 HANGMAN_STATES = [
     [

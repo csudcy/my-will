@@ -1,11 +1,16 @@
 import json
+import os
+
 
 class Dictionary(object):
     def __init__(self):
+        # Work out the path to the dictionary
+        dict_path = './dict/dictionary.json'
+        if os.path.abspath('.').endswith('helpers'):
+            dict_path = '.' + dict_path
+
         # Load the dictionary
-        # /app/plugins
-        import os
-        with open(os.path.abspath('../dict/dictionary.json'), 'r') as f:
+        with open(os.path.abspath(dict_path), 'r') as f:
             self._dict = json.load(f)
 
     def get_dict(self):
