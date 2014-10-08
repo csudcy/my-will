@@ -39,7 +39,6 @@ TOIMPROVE:
  * Hangman
   * Game per room
   * Persist over restart
-  * Show number of possible words matching given guesses
   * Keep stats
    * Word length vs. guesses taken
    * Correct vs. incorrect guesses

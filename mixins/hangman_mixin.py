@@ -114,33 +114,6 @@ HANGMAN_STATES = [
     ],
 ]
 
-
-SECRETS_TEMPLATE = """
-    word_count    : {word_count}
-    state         : {state}
-    word          : {word}
-    word_revealed : {word_revealed}
-    guesses_right : {guesses_right}
-    guesses_wrong : {guesses_wrong}
-"""
-
-
-STATUS_TEMPLATE = """
-    {board[0]}
-    {board[1]}
-    {board[2]}
-    {board[3]}
-    {board[4]}
-    {board[5]}
-    {board[6]}
-    {board[7]}
-
-    Word: {word}
-
-    Right guesses: {guesses_right}
-    Wrong guesses: {guesses_wrong}
-"""
-
 SECRETS_TEMPLATE = u"""
     word_count    : {word_count}
     state         : {state}
@@ -162,6 +135,7 @@ STATUS_TEMPLATE = u"""    {board[0]}
 
     {word}
     {guesses_wrong}
+    Could be {possible_words} of {total_words} words I know
 """
 
 class HangmanMixin(DictMixin):
@@ -204,12 +178,24 @@ class HangmanMixin(DictMixin):
         if self.state == 'NOT_PLAYING':
             return 'Sorry, it doesn\'t look like you\'ve started a game yet?'
 
+        # Find how many words match
+        revealed_re = '^%s$' % self.word_revealed
+        revealed_re = revealed_re.replace(' ', '')
+        already_guessed_re = '[^%s%s]' % (
+            ''.join(self.guesses_right),
+            ''.join(self.guesses_wrong),
+        )
+        revealed_re = revealed_re.replace('_', already_guessed_re)
+        possible_words = [k for k in self.dict if re.match(revealed_re, k)]
+
         # Prepare the output
         output = STATUS_TEMPLATE.format(
             board=HANGMAN_STATES[len(self.guesses_wrong)],
             word=self.word_revealed,
             guesses_right=', '.join(self.guesses_right),
             guesses_wrong=', '.join(self.guesses_wrong),
+            possible_words=len(possible_words),
+            total_words=len(self.dict),
         )
 
         # Check if the game is over
