@@ -1,6 +1,6 @@
 import random
 import re
-from dict_mixin import DictMixin
+from dict_mixin import Dictionary
 
 HANGMAN_STATES = [
     [
@@ -114,8 +114,10 @@ HANGMAN_STATES = [
     ],
 ]
 
+
 SECRETS_TEMPLATE = u"""
-    word_count    : {word_count}
+    total_words   : {total_words}
+    valid_words   : {valid_words}
     state         : {state}
     word          : {word}
     word_revealed : {word_revealed}
@@ -138,14 +140,14 @@ STATUS_TEMPLATE = u"""    {board[0]}
     Could be {possible_words} of {total_words} words I know
 """
 
-class HangmanMixin(DictMixin):
+# Load the dictionary
+dictionary = Dictionary()
+
+# Only use good words
+valid_words = [k for k in dictionary.get_dict() if re.match('^[a-zA-Z]{4,20}$', k)]
+
+class Hangman(object):
     def __init__(self):
-        # Load the dictionary
-        DictMixin.__init__(self)
-        # ditch the shit words
-        bad_keys = [k for k in self.dict if not re.match('^[a-zA-Z]{4,20}$', k)]
-        for k in bad_keys:
-            self.dict.pop(k)
         # Game variables
         self.state = 'NOT_PLAYING'
         self.word = None
@@ -162,7 +164,7 @@ class HangmanMixin(DictMixin):
 
         # Setup a new game
         self.state = 'PLAYING'
-        self.word = random.choice(self.dict.keys())
+        self.word = random.choice(valid_words)
         self.word_revealed = ('_ ' * len(self.word)).strip()
         self.guesses_right = []
         self.guesses_wrong = []
@@ -187,9 +189,9 @@ class HangmanMixin(DictMixin):
                 ''.join(self.guesses_wrong),
             )
         else:
-            remaining_letters_re == '.'
+            remaining_letters_re = '.'
         revealed_re = revealed_re.replace('_', remaining_letters_re)
-        possible_words = [k for k in self.dict if re.match(revealed_re, k)]
+        possible_words = [k for k in valid_words if re.match(revealed_re, k)]
 
         # Prepare the output
         output = STATUS_TEMPLATE.format(
@@ -198,7 +200,7 @@ class HangmanMixin(DictMixin):
             guesses_right=', '.join(self.guesses_right),
             guesses_wrong=', '.join(self.guesses_wrong),
             possible_words=len(possible_words),
-            total_words=len(self.dict),
+            total_words=len(valid_words),
         )
 
         # Check if the game is over
@@ -208,9 +210,8 @@ class HangmanMixin(DictMixin):
                 output += 'YOU WON!'
             elif self.state == 'LOST':
                 output += 'GAME OVER!'
-            output += '\n\n    {word} : {definition}'.format(
-                word=self.word.title(),
-                definition=self.dict[self.word]
+            output += '\n\n    {definition}'.format(
+                definition=dictionary.get_definition(self.word)
             )
 
         # Send back the message
@@ -221,7 +222,8 @@ class HangmanMixin(DictMixin):
         Reveal all my inner secrets...
         """
         return SECRETS_TEMPLATE.format(
-            word_count=len(self.dict),
+            total_words=len(dictionary.get_dict()),
+            valid_words=len(valid_words),
             state=self.state,
             word=self.word,
             word_revealed=self.word_revealed,
@@ -300,7 +302,7 @@ class HangmanMixin(DictMixin):
         return self.get_status()
 
 if __name__ == '__main__':
-    hm = HangmanMixin()
+    hm = Hangman()
     print hm.get_secrets()
     print hm.get_status()
     print hm.get_secrets()
@@ -308,5 +310,5 @@ if __name__ == '__main__':
     print hm.get_secrets()
     print hm.guess('1')
     print hm.guess('e')
-    print hm.guess('etaoin schrdlu')
-    print hm.guess('abcdefghijklmnopqrstuvwxyz')
+    for letter in 'etaoin schrdlu abcdefghijklmnopqrstuvwxyz':
+        print hm.guess(letter)

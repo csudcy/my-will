@@ -10,7 +10,7 @@ EMOTICONS_URL = "https://%(server)s/v2/emoticon?max-results=1000&auth_token=%(to
 store = {}
 memo = Memoizer(store)
 
-class HipchatEmoticonsMixin(object):
+class HipchatEmoticons(object):
     def __init__(self, server, token):
         self.url = EMOTICONS_URL % {
             "server": server,
@@ -27,7 +27,7 @@ class HipchatEmoticonsMixin(object):
         data = response.json()
         return data['items']
 
-    def find_emoticons(self, search=None):
+    def find(self, search=None):
         """
         Find emoticons based on the given search string
         """
@@ -46,11 +46,11 @@ class HipchatEmoticonsMixin(object):
         )
 
 if __name__ == '__main__':
-    hem = HipchatEmoticonsMixin(
+    he = HipchatEmoticons(
         'api.hipchat.com',
         '<V2 API token goes here>'
     )
-    print len(hem.find_emoticons())
-    print len(hem.find_emoticons('ar'))
-    print hem.find_emoticons('ar')
-    print hem.find_emoticons('arya')
+    print len(he.find())
+    print len(he.find('ar'))
+    print he.find('ar')
+    print he.find('arya')
