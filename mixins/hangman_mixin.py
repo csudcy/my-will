@@ -252,33 +252,31 @@ class HangmanMixin(DictMixin):
         if self.state != 'PLAYING':
             return 'Sorry, it doesn\'t look like you\'re currently playing a game?'
 
-        # Check the input
-        output = []
-        for letter in guess.upper():
-            # Check this is a letter we're interested in
-            letter = letter.strip()
-            if not letter:
-                continue
-            if not re.match('^[A-Z]$', letter):
-                output.append(
-                    '{letter} is not a letter!'.format(
-                        letter=letter,
-                    )
+        # Check this is a guess we're interested in
+        guess = guess.strip().upper()
+        if not re.match('^[A-Z]+$', guess):
+            if len(guess) == 1:
+                return '{guess} is not a letter!'.format(
+                    guess=guess,
                 )
-                continue
+            else:
+                return '"{guess}" is not all letters!'.format(
+                    guess=guess,
+                )
+
+        # Check the input
+        if len(guess) == 1:
+            # Single letter guess
 
             # Check it hasnt been tried before
-            if letter in self.guesses_right or letter in self.guesses_wrong:
-                output.append(
-                    'You already tried {letter}!'.format(
-                        letter=letter,
-                    )
+            if guess in self.guesses_right or guess in self.guesses_wrong:
+                return 'You already tried {guess}!'.format(
+                    guess=guess,
                 )
-                continue
 
             # Check if it's right or wrong
-            if letter in self.word:
-                self.guesses_right.append(letter)
+            if guess in self.word:
+                self.guesses_right.append(guess)
 
                 # Update word revealed
                 self.word_revealed = ' '.join([w if w in self.guesses_right else '_' for w in self.word])
@@ -287,20 +285,30 @@ class HangmanMixin(DictMixin):
                 if not '_' in self.word_revealed:
                     self.state = 'WON'
             else:
-                self.guesses_wrong.append(letter)
+                self.guesses_wrong.append(guess)
 
                 # Check if they lost
                 if len(self.guesses_wrong) + 1 == len(HANGMAN_STATES):
                     self.state = 'LOST'
+        else:
+            # Full word guess
 
-            # Check we're still playing
-            if self.state != 'PLAYING':
-                break
+            # Check if the word is correct
+            if len(guess) != len(self.word):
+                return 'Wat? {guess} isnt even the same number of letters!'.format(
+                    guess=guess,
+                )
+            if guess != self.word:
+                return 'Nope, the word is not {guess}!'.format(
+                    guess=guess,
+                )
+
+            # The guess is correct, you win!
+            self.state = 'WON'
+            self.word_revealed = self.word
 
         # Show the final status
-        output.append(self.get_status())
-
-        return '\n'.join(output)
+        return self.get_status()
 
 if __name__ == '__main__':
     hm = HangmanMixin()
