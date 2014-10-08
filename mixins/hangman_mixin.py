@@ -114,8 +114,7 @@ HANGMAN_STATES = [
     ],
 ]
 
-
-SECRETS_TEMPLATE = """
+SECRETS_TEMPLATE = u"""
     word_count    : {word_count}
     state         : {state}
     word          : {word}
@@ -125,8 +124,7 @@ SECRETS_TEMPLATE = """
 """
 
 
-STATUS_TEMPLATE = """
-    {board[0]}
+STATUS_TEMPLATE = u"""    {board[0]}
     {board[1]}
     {board[2]}
     {board[3]}
@@ -135,34 +133,9 @@ STATUS_TEMPLATE = """
     {board[6]}
     {board[7]}
 
-    Word: {word}
-
-    Right guesses: {guesses_right}
-    Wrong guesses: {guesses_wrong}
-"""
-
-SECRETS_TEMPLATE = """
-    word_count    : {word_count}
-    state         : {state}
-    word          : {word}
-    word_revealed : {word_revealed}
-    guesses_right : {guesses_right}
-    guesses_wrong : {guesses_wrong}
-"""
-
-
-STATUS_TEMPLATE = """
-    {board[0]}
-    {board[1]}
-    {board[2]}
-    {board[3]}
-    {board[4]}
-    {board[5]}
-    {board[6]}
-    {board[7]}
-
-    Word: {word}
-    Guessed: {guesses_wrong}
+    {word}
+    {guesses_wrong}
+    Could be {possible_words} of {total_words} words I know
 """
 
 class HangmanMixin(DictMixin):
@@ -205,21 +178,37 @@ class HangmanMixin(DictMixin):
         if self.state == 'NOT_PLAYING':
             return 'Sorry, it doesn\'t look like you\'ve started a game yet?'
 
+        # Find how many words match
+        revealed_re = '^%s$' % self.word_revealed
+        revealed_re = revealed_re.replace(' ', '')
+        already_guessed_re = '[^%s%s]' % (
+            ''.join(self.guesses_right),
+            ''.join(self.guesses_wrong),
+        )
+        revealed_re = revealed_re.replace('_', already_guessed_re)
+        possible_words = [k for k in self.dict if re.match(revealed_re, k)]
+
         # Prepare the output
         output = STATUS_TEMPLATE.format(
             board=HANGMAN_STATES[len(self.guesses_wrong)],
             word=self.word_revealed,
             guesses_right=', '.join(self.guesses_right),
             guesses_wrong=', '.join(self.guesses_wrong),
+            possible_words=len(possible_words),
+            total_words=len(self.dict),
         )
 
         # Check if the game is over
-        if self.state == 'WON':
-            output += '\n YOU WON! \n'
-            output += '{word}: {definition}'.format(word=self.word, definition=self.dict[self.word])
-        elif self.state == 'LOST':
-            output += '\n GAME OVER! The word was %s \n' % self.word
-            output += '{word}: {definition}'.format(word=self.word, definition=self.dict[self.word])
+        if self.state != 'PLAYING':
+            output += '\n        '
+            if self.state == 'WON':
+                output += 'YOU WON!'
+            elif self.state == 'LOST':
+                output += 'GAME OVER!'
+            output += '\n\n    {word} : {definition}'.format(
+                word=self.word.title(),
+                definition=self.dict[self.word]
+            )
 
         # Send back the message
         return output
@@ -249,33 +238,62 @@ class HangmanMixin(DictMixin):
         if self.state != 'PLAYING':
             return 'Sorry, it doesn\'t look like you\'re currently playing a game?'
 
-        # Check the input
+        # Check this is a guess we're interested in
         guess = guess.strip().upper()
-        if not re.match('^[A-Z]$', guess):
-            return 'That\'s not a letter!'
+        if not re.match('^[A-Z]+$', guess):
+            if len(guess) == 1:
+                return '{guess} is not a letter!'.format(
+                    guess=guess,
+                )
+            else:
+                return '"{guess}" is not all letters!'.format(
+                    guess=guess,
+                )
 
-        # Check it hasnt been tried before
-        if guess in self.guesses_right or guess in self.guesses_wrong:
-            return 'You already tried {guess}!'.format(
-                guess=guess,
-            )
+        # Check the input
+        if len(guess) == 1:
+            # Single letter guess
 
-        if guess in self.word:
-            self.guesses_right.append(guess)
+            # Check it hasnt been tried before
+            if guess in self.guesses_right or guess in self.guesses_wrong:
+                return 'You already tried {guess}!'.format(
+                    guess=guess,
+                )
 
-            # Update word revealed
-            self.word_revealed = ' '.join([w if w in self.guesses_right else '_' for w in self.word])
+            # Check if it's right or wrong
+            if guess in self.word:
+                self.guesses_right.append(guess)
 
-            # Check if they won
-            if not '_' in self.word_revealed:
-                self.state = 'WON'
+                # Update word revealed
+                self.word_revealed = ' '.join([w if w in self.guesses_right else '_' for w in self.word])
+
+                # Check if they won
+                if not '_' in self.word_revealed:
+                    self.state = 'WON'
+            else:
+                self.guesses_wrong.append(guess)
+
+                # Check if they lost
+                if len(self.guesses_wrong) + 1 == len(HANGMAN_STATES):
+                    self.state = 'LOST'
         else:
-            self.guesses_wrong.append(guess)
+            # Full word guess
 
-            # Check if they lost
-            if len(self.guesses_wrong) + 1 == len(HANGMAN_STATES):
-                self.state = 'LOST'
+            # Check if the word is correct
+            if len(guess) != len(self.word):
+                return 'Wat? {guess} isnt even the same number of letters!'.format(
+                    guess=guess,
+                )
+            if guess != self.word:
+                return 'Nope, the word is not {guess}!'.format(
+                    guess=guess,
+                )
 
+            # The guess is correct, you win!
+            self.state = 'WON'
+            self.word_revealed = self.word
+
+        # Show the final status
         return self.get_status()
 
 if __name__ == '__main__':
@@ -287,20 +305,5 @@ if __name__ == '__main__':
     print hm.get_secrets()
     print hm.guess('1')
     print hm.guess('e')
-    print hm.guess('t')
-    print hm.guess('a')
-    print hm.guess('o')
-    print hm.guess('i')
-    print hm.guess('n')
-    print hm.guess('s')
-    print hm.guess('c')
-    print hm.guess('h')
-    print hm.guess('r')
-    print hm.guess('d')
-    print hm.guess('l')
-    print hm.guess('u')
-    for letter in 'abcdefghijklmnopqrstuvwxyz':
-        if hm.state == 'PLAYING':
-            print hm.guess(letter)
-        else:
-            break
+    print hm.guess('etaoin schrdlu')
+    print hm.guess('abcdefghijklmnopqrstuvwxyz')

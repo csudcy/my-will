@@ -3,7 +3,9 @@ import json
 class DictMixin(object):
     def __init__(self):
         # Load the dictionary
-        with open('/app/plugins/dict/dictionary.json', 'r') as f:
+        # /app/plugins
+        import os
+        with open(os.path.abspath('./dict/dictionary.json'), 'r') as f:
             self.dict = json.load(f)
 
     def get_definition(self, word):

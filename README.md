@@ -34,14 +34,11 @@ TODO:
   * Random rage
   * Random refusal to work
   * Willisms
-  * Restart
 
 TOIMPROVE:
  * Hangman
   * Game per room
   * Persist over restart
-  * Guess multiple letters/whole word
-  * Show number of possible words matching given guesses
   * Keep stats
    * Word length vs. guesses taken
    * Correct vs. incorrect guesses
@@ -51,5 +48,7 @@ TOIMPROVE:
 
 TOFIX:
  * Respond to invitations
- * Cut down commands listed in help
- * Heroku/github checking
+
+FAILED:
+ * Restart
+  * Will catches ALL exceptions. I tried monkey patching the listener to die but it seems to auto restart just that thread.
