@@ -6,8 +6,18 @@ from will.decorators import respond_to, periodic, hear, randomly, route, rendere
 
 from mixins.hipchat_emoticons_mixin import HipchatEmoticonsMixin
 
+import settings
+
 
 class EmoticonPlugin(WillPlugin, HipchatEmoticonsMixin):
+
+    def __init__(self, *args, **kwargs):
+        HipchatEmoticonsMixin.__init__(
+            self,
+            settings.HIPCHAT_SERVER,
+            settings.V2_TOKEN
+        )
+        WillPlugin.__init__(self, *args, **kwargs)
 
     @respond_to("^emoticon me(?P<search>.*?)$")
     def emoticon_me(self, message, search=None):

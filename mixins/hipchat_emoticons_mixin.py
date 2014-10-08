@@ -4,8 +4,6 @@ import re
 from memoize import Memoizer
 import requests
 
-import settings
-
 
 EMOTICONS_URL = "https://%(server)s/v2/emoticon?max-results=1000&auth_token=%(token)s"
 
@@ -13,18 +11,19 @@ store = {}
 memo = Memoizer(store)
 
 class HipchatEmoticonsMixin(object):
+    def __init__(self, server, token):
+        self.url = EMOTICONS_URL % {
+            "server": server,
+            "token": token
+        }
 
     @memo(max_age=12*60*60)
     def get_emoticon_list(self):
         """
         Fetch the list of emoticons from hipchat
         """
-        url = EMOTICONS_URL % {
-            "server": settings.HIPCHAT_SERVER,
-            "token": settings.V2_TOKEN
-        }
         headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
-        response = requests.get(url, headers=headers)
+        response = requests.get(self.url, headers=headers)
         data = response.json()
         return data['items']
 
@@ -45,3 +44,13 @@ class HipchatEmoticonsMixin(object):
             lambda e: '(%s)' % e['shortcut'],
             emoticons,
         )
+
+if __name__ == '__main__':
+    hem = HipchatEmoticonsMixin(
+        'api.hipchat.com',
+        '<V2 API token goes here>'
+    )
+    print len(hem.find_emoticons())
+    print len(hem.find_emoticons('ar'))
+    print hem.find_emoticons('ar')
+    print hem.find_emoticons('arya')
