@@ -14,7 +14,7 @@ class QuestPlugin(WillPlugin):
 		else: 
 			self.reply(message, "Sorry, {0} a quest is already in progress".format(message.sender.nick))
 
-	@respond_to("^aye$")
+	@respond_to("^join$")
 	def quest_join(self, message):
 		if quest.add_user(message.sender.nick):
 			self.reply(message, "You are added to the quest {0}!".format(message.sender.nick))
@@ -31,6 +31,7 @@ class QuestPlugin(WillPlugin):
 	def move_north(self, message):
 		if quest.users_turn(message.sender.nick) and quest.status == 'started':
 			response = quest.move_north(message)
+			print 'response from move north {0}'.format(response)
 			self.reply(message, response)
 
 	@respond_to("^south$")
@@ -56,6 +57,7 @@ class QuestPlugin(WillPlugin):
 		print 'using'
 		if quest.users_turn(message.sender.nick) and quest.status == 'started':
 			response = quest.use(item)
+			print 'response to use is {0}'.format(response)
 			self.reply(message, response)
 
 	@respond_to("^attack (?P<monster>.*)$")
@@ -63,6 +65,7 @@ class QuestPlugin(WillPlugin):
 		print 'attacking'
 		if quest.users_turn(message.sender.nick) and quest.status == 'started':
 			response = quest.attack(monster)
+			print 'response to atack is {0}'.format(response)
 			self.reply(message, response)
 
 	@respond_to("^pick up (?P<item>.*)$")
@@ -70,4 +73,5 @@ class QuestPlugin(WillPlugin):
 		print 'picking up'
 		if quest.users_turn(message.sender.nick) and quest.status == 'started':
 			response = quest.pick_up(item)
+			print 'response to pick up is {0}'.format(response)
 			self.reply(message, response)

@@ -42,7 +42,7 @@ class Quest(object):
 		self.status = 'started'
 		self.turn = 0
 		self.users.append(name)
-		return 'Those who want to be a part of the quest say aye:' + self.dungeon_map[json.dumps(self.coordinates)]['description']
+		return 'Those who want to be a part of the quest say join:' + self.dungeon_map[json.dumps(self.coordinates)]['description']
 
 	def add_user(self, name):
 		if self.status == 'started':
@@ -88,13 +88,9 @@ class Quest(object):
 		print 'trying to move to {0} from {1}'.format(str(next_move), self.coordinates)
 		if json.dumps(next_move) in self.dungeon_map.keys():
 			self.coordinates = next_move
-			print 'debug0'
-			self.before_return()
-			print 'debug1'
-			return self.dungeon_map[json.dumps(next_move)]['description']
+			return self.before_return(self.dungeon_map[json.dumps(next_move)]['description'], False)
 		else: 
-			self.before_return()
-			return 'Sorry {0}, but you can\'t move there'.format(message.sender.nick)
+			return self.before_return('Sorry {0}, but you can\'t move there'.format(message.sender.nick), False)
 
 	def use(self, entry):
 		for item in self.items.keys():
@@ -102,12 +98,10 @@ class Quest(object):
 				for use in self.items[item]['uses'].keys():
 					if use in str(entry).lower():
 						response = self.use_item(use, message)
-						monster_response = self.before_return(True)
-						return 'You successfully used {0} in conjunction with {1}, causing {2}'.format(item, use, reponse) + monster_response
-					monster_response = self.before_return(True)
-					return 'Sorry you can\'t use {0} like that'.format(item) + monster_response
-		monster_response = self.before_return(True)
-		return 'Sorry you don\'t have that item' + monster_response
+						return self.before_return('You successfully used {0} in conjunction with {1}, causing {2}'.format(item, use, reponse), True)
+					return self.before_return('Sorry you can\'t use {0} like that'.format(item), True)
+					
+		return self.before_return('Sorry you don\'t have that item', True)
 
 	def attack(self, entry):
 		print 'monsters to attack are {0}'.format(str(self.dungeon_map[json.dumps(self.coordinates)].get('monsters', [])))
@@ -116,20 +110,18 @@ class Quest(object):
 				print 'attacking {0}'.format(monster['name'])
 				return self.attack_monster(monster)
 	
-		monster_response = self.before_return(True)
-		return'There are no monsters of that name' + monster_response
+		return self.before_return('There are no monsters of that name', True)
 
 	def pick_up(self, entry):
 		for item in self.dungeon_map[json.dumps(self.coordinates)].get('items', {}).keys():
 			if item in str(entry).lower():
 				items.update(self.dungeon_map[json.dumps(self.coordinates)].get('items')[item])
 				del self.dungeon_map[json.dumps(self.coordinates)].get('items')[item]
-				monster_response = self.before_return(True)
-				return 'You now have {0} in your inventory'.format(item) + monster_response
-		monster_response = self.before_return(True)
-		return'That item is not here' + monster_response
+				return self.before_return('You now have {0} in your inventory'.format(item), True)
+		return self.before_return('That item is not here', True)
 
 	def monster_attack(self):
+		print 'monsters to be attacked by are {0}'.format(str(self.dungeon_map[json.dumps(self.coordinates)].get('monsters', [])))
 		for monster in self.dungeon_map[json.dumps(self.coordinates)].get('monsters', []):
 			if random() < self.luck:
 				self.health = self.health - monster['power']
@@ -139,12 +131,14 @@ class Quest(object):
 				return 'The {0} slowly dismembers you in truely terrifying ways. You are dead'.format(monster['name'])
 		return ''
 
-	def before_return(self, monster=True):
+	def before_return(self, response, monster=True):
 		self.turn = self.turn + 1 % len(self.users)
 		print self.turn
 		if monster:
 			monster_response = self.monster_attack()
-			return monster_response
+			return response + monster_response
+		else:
+			return response
 
 	def use_item(self, use, message):
 		if 'inc health' in self.items[item]['uses'][use]:
@@ -163,6 +157,8 @@ class Quest(object):
 	def attack_monster(self, monster):
 		if random() < self.luck:
 			monster['health'] = monster['health'] - self.power
+			if monster['health'] <= 0:
+				return 'You killed the {0}, you absolute bastard. He had wife and children'.format(monster['name'])	
 			return 'The {0} took {1} damage'.format(monster['name'], monster['power'])
 		else: 
 			return 'You missed'
