@@ -1,7 +1,7 @@
 from will.plugin import WillPlugin
 from will.decorators import respond_to, periodic, hear, randomly, route, rendered_template, require_settings
 
-from helpers.asii_art import ASCIIArt
+from helpers.ascii_art import ASCIIArt
 
 
 class ASCIIPlugin(WillPlugin):

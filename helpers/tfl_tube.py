@@ -11,10 +11,7 @@ LINE_STATUS_URL = "http://cloud.tfl.gov.uk/TrackerNet/LineStatus"
 store = {}
 memo = Memoizer(store)
 
-
-class TFLTUBE(object):
-    def __init__(self):
-        self.url =LINE_STATUS_URL
+class TFLTube(object):
 
     @memo(max_age=60)
     def get_all_line_statuses(self):
@@ -22,7 +19,7 @@ class TFLTUBE(object):
         Fetch the list of line statuses from tfl
         """
         headers = {'Content-type': 'application/xml', 'Accept': 'application/xml'}
-        response = requests.get(self.url, headers=headers)
+        response = requests.get(LINE_STATUS_URL, headers=headers)
         # do some encoding to make sure we get it in the correct format
         response.encoding ='utf-8'
         xml = response.text
@@ -55,14 +52,14 @@ class TFLTUBE(object):
             return 'The {0} line currently has {1}'.format(line, line_statuses[line.lower()])
         else:
             key = random.choice(line_statuses.keys())
-            return 'I don\'t know the {0} line so I\'ve picked on at random for you. Your line is the {1} line and it currently has {2}'.format(
+            return 'I don\'t know the {0} line so I\'ve picked one at random for you. Your line is the {1} line and it currently has {2}'.format(
                 line,
-                key,
+                key.title(),
                 line_statuses[key]
             )
 
 if __name__ == '__main__':
-    tfl_tube = TFLTUBE()
+    tfl_tube = TFLTube()
     print tfl_tube.get_all_line_statuses()
     print tfl_tube.get_line_status('Bakerloo')
     print tfl_tube.get_line_status('Bakerpoo')
