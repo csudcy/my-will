@@ -3,11 +3,9 @@ import ujson as json
 
 class Quest(object):
 
-	#status = 'ended'
-	status = 'started'
+	status = 'ended'
 	coordinates = [0,0]
-	#users = []
-	users = ['test']
+	users = []
 	turn = 0
 	dungeon_map = {
 		'[0,0]':{
@@ -110,7 +108,7 @@ class Quest(object):
 				return self.attack_monster(monster, message)
 	
 		self.on_return_monster('There are no monsters of that name')
-		
+
 	def pick_up(self, entry):
 		for item in self.dungeon_map[json.dumps(self.coordinates)].get('items', {}).keys():
 			if item in str(entry).lower():
