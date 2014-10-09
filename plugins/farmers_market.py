@@ -1,6 +1,7 @@
+from datetime import datetime
+
 from will.plugin import WillPlugin
 from will.decorators import respond_to, periodic, hear, randomly, route, rendered_template, require_settings
-from datetime import datetime
 
 
 class FarmersMarketPlugin(WillPlugin):
@@ -9,15 +10,17 @@ class FarmersMarketPlugin(WillPlugin):
     def farmers_market_reminder(self, message, word):
         now = datetime.now()
         if now.weekday() == 3:
-            msg = "Get your pulled pork baps today!"
+            food = 'pulled pork baps'
         else:
-            msg = "Get your cheeky burgers today!"
-        return self.say("It's farmers' market day. {0}".format(msg))
+            food = 'cheeky burgers'
+        return self.say(
+            "It's farmers' market day. Get your {food} now!".format(food=food)
+        )
 
-    @respond_to("market")
-    def is_it_farmers_market_day(self, message, word):
+    @hear("market")
+    def is_it_farmers_market_day(self, message):
         now = datetime.now()
         if now.weekday() in [3, 4]:
-            return self.say("YES IT'S FARMERS' MARKET DAY")
+            return self.reply(message, "YES IT'S FARMERS' MARKET DAY!")
         else:
-            return self.say("No it's not farmers' market day")
+            return self.reply(message, "No, it's not farmers' market day :(")

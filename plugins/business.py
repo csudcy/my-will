@@ -1,15 +1,18 @@
 from will.plugin import WillPlugin
-from will.decorators import respond_to
+from will.decorators import respond_to, periodic, hear, randomly, route, rendered_template, require_settings
 
-from helpers.business import acquire_business
+from helpers.business import Business
+
 
 class BusinessPlugin(WillPlugin):
+
     def __init__(self, *args, **kwargs):
+        self.business = Business()
         return WillPlugin.__init__(self, *args, **kwargs)
 
-    @respond_to("^business")
-    def business(self, message, word):
+    @hear("business")
+    def hear_business(self, message):
         """
         business: Get your favourite corporate strategems
         """
-        return self.reply(message, acquire_business())
+        return self.reply(message, self.business.acquire_business())
