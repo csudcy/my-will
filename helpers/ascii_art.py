@@ -1,4 +1,7 @@
+import random
+
 from pyfiglet import Figlet
+
 
 class ASCIIArt(object):
     def __init__(self):
@@ -25,4 +28,5 @@ class ASCIIArt(object):
 
 if __name__ == '__main__':
     aa = ASCIIArt()
+    print aa.render('This is SPARTA!')
     print aa.render_all('Verily this vichysoisse of verbiage veers most verbose')

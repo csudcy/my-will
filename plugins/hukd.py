@@ -16,5 +16,5 @@ class HUKDPlugin(WillPlugin):
         """
         # Set the default here because I'm not sure how deal_type is set if the capture group is empty
         if not deal_type:
-            deal_type = 'new'
+            deal_type = 'random'
         return self.reply(message, self.dealer.get_deal(deal_type))

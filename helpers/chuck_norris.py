@@ -6,7 +6,7 @@ CHUCK_NORRIS_JOKE_URL = "http://api.icndb.com/jokes/random"
 JOKE_WITH_NAME_URL = "http://api.icndb.com/jokes/random?firstName=%(first_name)s&lastName=%(last_name)s"
 
 
-class CHUCKNORRIS(object):
+class ChuckNorris(object):
     def __init__(self):
         self.cn_url = CHUCK_NORRIS_JOKE_URL
         self.joke_with_name_url = JOKE_WITH_NAME_URL
@@ -27,6 +27,6 @@ class CHUCKNORRIS(object):
         return self.get_joke(url)
 
 if __name__ == '__main__':
-    cn = CHUCKNORRIS()
+    cn = ChuckNorris()
     print cn.get_chuck_norris_joke()
     print cn.get_joke_with_name('Will', 'Bot')
