@@ -9,7 +9,7 @@ class LOLPlugin(WillPlugin):
         self.dictionary = Dictionary()
         return WillPlugin.__init__(self, *args, **kwargs)
 
-    @randomly(num_times_per_day=3600*24)
+    @randomly(num_times_per_day=360*24)
     def define(self, message, word):
         """
         define ___: Get the definition of a word
