@@ -13,4 +13,5 @@ class ASCIIPlugin(WillPlugin):
     @respond_to("^ascii me (?P<text>.*?)$")
     def ascii_me(self, message, text):
         "ascii me ___: Say ___ using a random ascii font"
-        self.reply(message, self.ascii_art.render(text))
+        art = self.ascii_art.render(text)
+        self.reply(message, '<pre>%s</pre>' % art, html=True)

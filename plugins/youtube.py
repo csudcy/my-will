@@ -14,7 +14,7 @@ class ImagesPlugin(WillPlugin):
     def youtube_me(self, message, search_query):
         """youtube me ___ : Search youtube for ___, and post a random one."""
 
-        result = self.youtube.search(search_query)
+        result = self.youtube.find(search_query)
         if result:
             self.reply(message, result)
         else:
