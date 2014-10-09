@@ -10,6 +10,7 @@ DONE:
  * Define
  * TFL status
  * Ascii me
+ * YouTube
 
 TODO:
  * Text FX:
@@ -20,7 +21,6 @@ TODO:
   * Lunch
  * Search internet sites:
   * Sporkle
-  * YouTube
   * Wiktionary
   * Wikipedia
   * XKCD
