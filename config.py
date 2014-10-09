@@ -86,12 +86,12 @@ PLUGIN_BLACKLIST = [
 # ------------------------------------------------------------------------------------
 
 # The list of rooms will should join.  Default is all rooms.
-# ROOMS = ['Testing, Will Kahuna',]
+ROOMS = ['WillbotTesting2',]
 
 
 # The room will will talk to if the trigger is a webhook and he isn't told a specific room.
 # Default is the first of ROOMS.
-# DEFAULT_ROOM = 'Testing, Will Kahuna'
+#DEFAULT_ROOM = 'WillbotTesting2'
 
 
 # Fully-qualified folders to look for templates in, beyond the two that

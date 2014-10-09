@@ -10,9 +10,9 @@ class Quest(object):
 	dungeon_map = {
 		'[0,0]':{
 			'description':
-				'This is the start room. Nothing is here except a creeping dread which is now seeping into your soul. You can go north',
+				'This is the start room. Nothing is here except a creeping dread which is now seeping into your soul. There is RedBull you can pick up. You can go north',
 			'items':{
-				'RedBull': {
+				'redbull': {
 					'uses': {
 						'inc_health': 2
 					}
@@ -24,7 +24,7 @@ class Quest(object):
 				'Deeper now. Some sounds echo from the next room. Something huge rears its head about you, it\'s a SharkInATornade!',
 			'monsters':[
 				{
-					'name': 'SharkInATornado',
+					'name': 'sharkinatornado',
 					'health': 3,
 					'power': 1
 				}
@@ -36,6 +36,7 @@ class Quest(object):
 	#items = {<name>: {'description': <string>, 'uses': {<item>: <response> }}}
 	health = 10
 	luck = 0.5
+	power = 1
 
 	def start_quest(self, name):
 		self.status = 'started'
@@ -48,7 +49,7 @@ class Quest(object):
 			self.users.append(name)
 
 	def users_turn(self, name):
-		if name == self.users[turn]:
+		if name == self.users[self.turn-1]:
 			return True
 		else:
 			return False
@@ -62,8 +63,6 @@ class Quest(object):
 	def end_quest(self):
 		if self.status == 'started':
 			self.status == 'ended'
-		else:
-			return 'The game hasn\'t begun yet you numpty'
 
 	def move_north(self, message):
 		next_move = [self.coordinates[0], self.coordinates[1]+1]
@@ -71,7 +70,7 @@ class Quest(object):
 
 
 	def move_south(self, message):
-		next_move = [self.coordinates[0], self.coordinates[1]+1]
+		next_move = [self.coordinates[0], self.coordinates[1]-1]
 		return self.try_move(message, next_move)
 
 
@@ -86,11 +85,16 @@ class Quest(object):
 
 
 	def try_move(self, message, next_move):
+		print 'trying to move to {0} from {1}'.format(str(next_move), self.coordinates)
 		if json.dumps(next_move) in self.dungeon_map.keys():
 			self.coordinates = next_move
-			self.on_return(self.dungeon_map[json.dumps(next_move)]['description'])
+			print 'debug0'
+			self.before_return()
+			print 'debug1'
+			return self.dungeon_map[json.dumps(next_move)]['description']
 		else: 
-			self.on_return('Sorry {0}, but you can\'t move there'.format(message.sender.nick))
+			self.before_return()
+			return 'Sorry {0}, but you can\'t move there'.format(message.sender.nick)
 
 	def use(self, entry):
 		for item in self.items.keys():
@@ -98,24 +102,32 @@ class Quest(object):
 				for use in self.items[item]['uses'].keys():
 					if use in str(entry).lower():
 						response = self.use_item(use, message)
-						self.on_return_monster('You successfully used {0} in conjunction with {1}, causing {2}'.format(item, use, reponse))
-					return self.on_return_monster('Sorry you can\'t use {0} like that'.format(item))
-		return self.on_return_monster('Sorry you don\'t have that item')
+						monster_response = self.before_return(True)
+						return 'You successfully used {0} in conjunction with {1}, causing {2}'.format(item, use, reponse) + monster_response
+					monster_response = self.before_return(True)
+					return 'Sorry you can\'t use {0} like that'.format(item) + monster_response
+		monster_response = self.before_return(True)
+		return 'Sorry you don\'t have that item' + monster_response
 
 	def attack(self, entry):
+		print 'monsters to attack are {0}'.format(str(self.dungeon_map[json.dumps(self.coordinates)].get('monsters', [])))
 		for monster in self.dungeon_map[json.dumps(self.coordinates)].get('monsters', []):
 			if monster['name'] in str(entry).lower():
-				return self.attack_monster(monster, message)
+				print 'attacking {0}'.format(monster['name'])
+				return self.attack_monster(monster)
 	
-		self.on_return_monster('There are no monsters of that name')
+		monster_response = self.before_return(True)
+		return'There are no monsters of that name' + monster_response
 
 	def pick_up(self, entry):
 		for item in self.dungeon_map[json.dumps(self.coordinates)].get('items', {}).keys():
 			if item in str(entry).lower():
 				items.update(self.dungeon_map[json.dumps(self.coordinates)].get('items')[item])
 				del self.dungeon_map[json.dumps(self.coordinates)].get('items')[item]
-				self.on_return_monster('You now have {0} in your inventory'.format(item))
-		self.on_return_monster('That item is not here')
+				monster_response = self.before_return(True)
+				return 'You now have {0} in your inventory'.format(item) + monster_response
+		monster_response = self.before_return(True)
+		return'That item is not here' + monster_response
 
 	def monster_attack(self):
 		for monster in self.dungeon_map[json.dumps(self.coordinates)].get('monsters', []):
@@ -127,14 +139,12 @@ class Quest(object):
 				return 'The {0} slowly dismembers you in truely terrifying ways. You are dead'.format(monster['name'])
 		return ''
 
-	def on_return_monster(self, response):
+	def before_return(self, monster=True):
 		self.turn = self.turn + 1 % len(self.users)
-		monster_response = self.monster_attack()
-		return response + monster_response
-
-	def on_return(self,response):
-		self.turn = self.turn + 1 % len(self.users)
-		return response
+		print self.turn
+		if monster:
+			monster_response = self.monster_attack()
+			return monster_response
 
 	def use_item(self, use, message):
 		if 'inc health' in self.items[item]['uses'][use]:
@@ -152,7 +162,7 @@ class Quest(object):
 
 	def attack_monster(self, monster):
 		if random() < self.luck:
-			monster['health'] = moster['health'] - self.power
+			monster['health'] = monster['health'] - self.power
 			return 'The {0} took {1} damage'.format(monster['name'], monster['power'])
 		else: 
 			return 'You missed'
