@@ -11,13 +11,14 @@ class Quest(object):
 		'[0,0]':{
 			'description':
 				'This is the start room. Nothing is here except a creeping dread which is now seeping into your soul. There is RedBull you can pick up. You can go north',
-			'items':{
-				'redbull': {
-					'uses': {
+			'items':[
+				{
+					'name': 'redbull',
+					'use': {
 						'inc_health': 2
 					}
 				}
-			}
+			]
 		},
 		'[0,1]':{
 			'description':
@@ -32,7 +33,7 @@ class Quest(object):
 		}
 	}
 	#dungeon_map = {<json dump of array coords>, {'description': <string>, 'items': <items>, 'monsters': [{'name': <name>, 'health': <int>, 'power': <int> ]}}
-	items = {}
+	items = []
 	#items = {<name>: {'description': <string>, 'uses': {<item>: <response> }}}
 	health = 10
 	luck = 0.5
@@ -93,13 +94,15 @@ class Quest(object):
 			return self.before_return('Sorry {0}, but you can\'t move there'.format(message.sender.nick), False)
 
 	def use(self, entry):
-		for item in self.items.keys():
-			if item in str(entry).lower():
-				for use in self.items[item]['uses'].keys():
-					if use in str(entry).lower():
-						response = self.use_item(use, message)
-						return self.before_return('You successfully used {0} in conjunction with {1}, causing {2}'.format(item, use, reponse), True)
-					return self.before_return('Sorry you can\'t use {0} like that'.format(item), True)
+		print 'items are {0}'.format(str(self.items))
+		for item in self.items:
+			if item['name'] in str(entry).lower():
+				#for use in self.items[item]['uses'].keys():
+			#		if use in str(entry).lower():
+					response = self.use_item(item['use'], message)
+					del item
+					return self.before_return('You successfully used {0} in conjunction with {1}, causing {2}'.format(item['name'], item['use'], response), True)
+			#		return self.before_return('Sorry you can\'t use {0} like that'.format(item), True)
 					
 		return self.before_return('Sorry you don\'t have that item', True)
 
@@ -113,11 +116,11 @@ class Quest(object):
 		return self.before_return('There are no monsters of that name', True)
 
 	def pick_up(self, entry):
-		for item in self.dungeon_map[json.dumps(self.coordinates)].get('items', {}).keys():
-			if item in str(entry).lower():
-				items.update(self.dungeon_map[json.dumps(self.coordinates)].get('items')[item])
-				del self.dungeon_map[json.dumps(self.coordinates)].get('items')[item]
-				return self.before_return('You now have {0} in your inventory'.format(item), True)
+		for item in self.dungeon_map[json.dumps(self.coordinates)].get('items', {}):
+			if item['name'] in str(entry).lower():
+				self.items.append(item)#self.dungeon_map[json.dumps(self.coordinates)].get('items')[item])
+				del item#self.dungeon_map[json.dumps(self.coordinates)].get('items')[item]
+				return self.before_return('You now have {0} in your inventory'.format(item['name']), True)
 		return self.before_return('That item is not here', True)
 
 	def monster_attack(self):
@@ -125,7 +128,7 @@ class Quest(object):
 		for monster in self.dungeon_map[json.dumps(self.coordinates)].get('monsters', []):
 			if random() < self.luck:
 				self.health = self.health - monster['power']
-				return 'but the {0} then dealt you {1} damage'.format(monster['name'], monster['power'])
+				return ', but the {0} then dealt you {1} damage'.format(monster['name'], monster['power'])
 			if self.health <= 0:
 				self.status ='ended'
 				return 'The {0} slowly dismembers you in truely terrifying ways. You are dead'.format(monster['name'])
@@ -143,7 +146,7 @@ class Quest(object):
 	def use_item(self, use, message):
 		if 'inc health' in self.items[item]['uses'][use]:
 			self.health =+ self.items[item]['uses'][use]['inc_health']
-			return 'You increased your health by {0} to {1}'.format(self.items[item]['uses'][use]['inc_health'], self.health)
+			return 'an increase in health from {0} to {1}'.format(self.items[item]['uses'][use]['inc_health'], self.health)
 		elif 'kill_monster' in self.items[item]['uses'][use]:
 			if len(self.dungeon_map[json.dumps(self.coordinates)].get('monsters'), []) > 1:
 				for monster in self.dungeon_map[json.dumps(self.oordinates)].get('monsters', []):
@@ -158,10 +161,11 @@ class Quest(object):
 		if random() < self.luck:
 			monster['health'] = monster['health'] - self.power
 			if monster['health'] <= 0:
-				return 'You killed the {0}, you absolute bastard. He had wife and children'.format(monster['name'])	
-			return 'The {0} took {1} damage'.format(monster['name'], monster['power'])
+				del monster
+				return self.before_return('You killed the {0}, you absolute bastard. He had wife and children'.format(monster['name']), True)
+			return self.before_return('The {0} took {1} damage'.format(monster['name'], monster['power']), True)
 		else: 
-			return 'You missed'
+			return self.before_return('You missed', True)
 
 quest = Quest()
 
