@@ -1,5 +1,6 @@
 import json
 import os
+import random
 
 
 class Dictionary(object):
@@ -16,6 +17,10 @@ class Dictionary(object):
     def get_dict(self):
         return self._dict
 
+    def get_random_definition(self):
+        word = random.choice(self._dict.keys())
+        return self.get_definition(word)
+
     def get_definition(self, word):
         if word.upper() in self._dict:
             return '{0}: {1}'.format(word.title(), self._dict[word.upper()])
@@ -26,3 +31,4 @@ if __name__ == '__main__':
     dm = Dictionary()
     print dm.get_definition('diploblastic')
     print dm.get_definition('asdfasdf')
+    print dm.get_random_definition()
