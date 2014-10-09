@@ -1,7 +1,4 @@
 *.pyc
 venv/
-<<<<<<< HEAD
 venv_linux/
 run_will.sh
-=======
->>>>>>> amended gitignore
