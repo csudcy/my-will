@@ -1,2 +1,3 @@
 will
 pymemoize
+pyfiglet

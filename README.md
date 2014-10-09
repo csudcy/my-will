@@ -7,10 +7,12 @@ DONE:
  * Emoticons
  * Generate a UUID
  * Hangman
+ * Define
+ * TFL status
+ * Ascii me
 
 TODO:
  * Text FX:
-  * Ascii me
   * Lorem ipsum
   * Hodor
  * Lists & searching (admin through web?):
