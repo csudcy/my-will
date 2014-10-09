@@ -9,8 +9,8 @@ class HUKDPlugin(WillPlugin):
         self.dealer = Dealer()
         return WillPlugin.__init__(self, *args, **kwargs)
 
-    @respond_to("^deal me (?P<word>[a-zA-Z]+)$")
-    def deal(self, message, deal_type):
+    @respond_to("^deal me ?(?P<deal_type>[a-zA-Z]*)$")
+    def deal(self, message, deal_type='new'):
         """
         deal ___: Get a hot UK deal!
         """

@@ -18,7 +18,7 @@ class Dealer(object):
         }
         return requests.get('http://api.hotukdeals.com/rest_api/v2/', params=payload).json()
 
-    def get_deal(self, type='new'):
+    def get_deal(self, type):
         if not HUKD_API_KEY:
             return "Set the HUKD_API_KEY! DEV FIX!!!"
         if type not in ('new', 'hot', 'random'):
