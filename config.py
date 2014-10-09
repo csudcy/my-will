@@ -52,7 +52,7 @@ PLUGINS = [
     #"will.plugins.chat_room",
     #"will.plugins.devops",
     "will.plugins.friendly",
-    "will.plugins.help",
+    #"will.plugins.help",
     "will.plugins.productivity",
     "will.plugins.web",
 
