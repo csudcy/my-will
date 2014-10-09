@@ -66,18 +66,3 @@ class QuestPlugin(WillPlugin):
 		if quest.users_go(messsage.sender.nick) and quest.status == 'started':
 			response = quest.pick_up(item)
 			self.say(response)
-
-	"""
-	@hear('^($')
-	def quest_response(self, message):
-		if quest.user_whos_go(message.sender.nick):
-			response = quest.enter_instruction(message)
-			self.say(response)
-	"""
-
-    #@respond_to("^define (?P<word>[a-zA-Z]+)$")
-    #def define(self, message, word):
-    #    """
-    # #   define ___: Get the definition of a word
-    # #   """
-    #    return self.reply(message, self.dictionary.get_definition(word))

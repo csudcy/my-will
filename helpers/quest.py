@@ -109,15 +109,9 @@ class Quest(object):
 			if monster['name'] in str(entry).lower():
 				return self.attack_monster(monster, message)
 	
-		self.on_return_monster('There are no monsters of that name')#. You flail aimlessly until hit yourself in the face with an axe and die'
-	
+		self.on_return_monster('There are no monsters of that name')
+		
 	def pick_up(self, entry):
-		"""
-		for monster in self.dungeon_map[json.dumps(self.coordinates)].get('monsters', []).keys:
-			if random() < luck:
-				self.status ='ended'
-				return 'The {0} slowly dismembers you in truely terrifying ways. You are dead'.format(monster['name'])
-		"""
 		for item in self.dungeon_map[json.dumps(self.coordinates)].get('items', {}).keys():
 			if item in str(entry).lower():
 				items.update(self.dungeon_map[json.dumps(self.coordinates)].get('items')[item])
@@ -171,17 +165,11 @@ class TestObject(object):
 	pass
 
 if __name__ == '__main__':
-	import pdb; pdb.set_trace()
 	message = TestObject()
 	setattr(message, 'sender', TestObject())	
-	#message.sender = object()
-	#setattr(message, 'nick', 'Test')
 	message.sender.nick = 'Test'
-	#print quest.start_quest(message.sender.nick)
 	print quest.pick_up('RedBull')
-
 	print quest.move_north(message)
-
 	print quest.attack('SharkInATornado')
 	print quest.attack('SharkInATornado')
 	print quest.attack('SharkInATornado')
