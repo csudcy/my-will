@@ -10,8 +10,11 @@ class HUKDPlugin(WillPlugin):
         return WillPlugin.__init__(self, *args, **kwargs)
 
     @respond_to("^deal me ?(?P<deal_type>[a-zA-Z]*)$")
-    def deal(self, message, deal_type='new'):
+    def deal(self, message, deal_type=None):
         """
-        deal ___: Get a hot UK deal!
+        deal me [___]: Get a hot UK deal!
         """
+        # Set the default here because I'm not sure how deal_type is set if the capture group is empty
+        if not deal_type:
+            deal_type = 'new'
         return self.reply(message, self.dealer.get_deal(deal_type))
