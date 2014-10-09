@@ -1,7 +1,7 @@
 from will.plugin import WillPlugin
 from will.decorators import respond_to
 
-from helpers.business import aquire_business
+from helpers.business import acquire_business
 
 class BusinessPlugin(WillPlugin):
     def __init__(self, *args, **kwargs):
@@ -12,4 +12,4 @@ class BusinessPlugin(WillPlugin):
         """
         business: Get your favourite corporate strategems
         """
-        return self.reply(message, aquire_business())
+        return self.reply(message, acquire_business())
