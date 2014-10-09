@@ -20,7 +20,7 @@ Year: {Year}
 Director: {Director}
 Plot: {Plot}
 Rotten Tomatoes Consensus: {tomatoConsensus}
-Rotten Tomatoes Rating: {tomatoRating}""".format(results)
+Rotten Tomatoes Rating: {tomatoRating}""".format(**results)
         except TypeError:
             response = """Sorry I can't find any info for "{0}" right now""".format(search_query)
 
