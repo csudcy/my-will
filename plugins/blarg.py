@@ -6,7 +6,7 @@ class BlargPlugin(WillPlugin):
         return WillPlugin.__init__(self, *args, **kwargs)
 
     @respond_to("^blarg")
-    def define(self, message, word):
+    def blarg(self, message, word):
         """
         blarg: Say hi!
         """
