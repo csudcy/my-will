@@ -4,7 +4,7 @@ from will.decorators import respond_to, periodic, hear, randomly, route, rendere
 from helpers.urban_dictionary import UrbanDictionary
 
 
-class DefinePlugin(WillPlugin):
+class UrbanDefinePlugin(WillPlugin):
     def __init__(self, *args, **kwargs):
         self.dictionary = UrbanDictionary()
         return WillPlugin.__init__(self, *args, **kwargs)
