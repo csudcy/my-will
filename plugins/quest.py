@@ -6,7 +6,7 @@ from helpers.quest import quest
 class QuestPlugin(WillPlugin):
 
 
-	@respond_to("^start a quest$")
+	@respond_to("^start a quest game$")
 	def quest_start(self, message):
 		if quest.status == 'ended':
 			response =  quest.start_quest(message.sender.nick)
@@ -19,7 +19,7 @@ class QuestPlugin(WillPlugin):
 		if quest.add_user(message.sender.nick):
 			self.reply(message, "You are added to the quest {0}!".format(message.sender.nick))
 
-	@respond_to("^end quest$")
+	@respond_to("^end quest game$")
 	def quest_end(self, message):
 		if quest.user_in_quest(message.sender.nick) and quest.status == 'started':
 			quest.end_quest()
