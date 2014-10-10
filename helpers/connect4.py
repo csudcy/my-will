@@ -64,7 +64,7 @@ class Connect4(object):
         # Check the input
         letter = move[0]
         number = int(move[1])
-        column = self.board[number]
+        column = self.board[number-1]
         empty_space_index = None
         for i in range(len(column)):
             if column[i] == '-':
