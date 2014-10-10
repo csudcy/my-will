@@ -38,3 +38,4 @@ ujson==1.33
 watchdog==0.7.0
 will==0.6.2
 wsgiref==0.1.2
+numpy==1.8.2
