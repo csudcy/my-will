@@ -3,4 +3,3 @@ will
 pymemoize
 pyfiglet
 ujson
-numpy

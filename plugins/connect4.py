@@ -44,4 +44,4 @@ class Connect4Plugin(WillPlugin):
         connect4 move ___: Make a move in the current connect4 game
         """
         game = self.get_game(message)
-        self.say(game.move(move), message=message, html=True)
+        self.say(game.play(move), message=message, html=True)
