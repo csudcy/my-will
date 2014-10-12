@@ -34,12 +34,12 @@ class Connect4(object):
 
         output = TOP_TEMPLATE
         for i in range(5, -1, -1):
-            output += '\n' + ROW_TEMPLATE.format(*[x[i] for x in self.board])
-        output += '\n' + TOP_TEMPLATE
+            output += '<br/>' + ROW_TEMPLATE.format(*[x[i] for x in self.board])
+        output += '<br/>' + TOP_TEMPLATE
 
         # Check if the game is over
         if self.state != 'PLAYING':
-            output += '\n' + 'GAME OVER!'
+            output += '<br/>' + 'GAME OVER!'
 
         # Send back the message
         return output
@@ -79,7 +79,7 @@ class Connect4(object):
         winner = self.check_board()
         if winner:
             self.state = 'NOT PLAYING'
-            return self.get_status() + '\nPlayer ' + winner + ' wins!'
+            return self.get_status() + '<br/>Player ' + winner + ' wins!'
         return self.get_status()
 
     def check_four_in_a_row(self, spaces):
