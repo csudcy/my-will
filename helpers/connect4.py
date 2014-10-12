@@ -1,8 +1,18 @@
 import re
 import numpy as np
 
-TOP_TEMPLATE = '========='
-ROW_TEMPLATE = "|{0}{1}{2}{3}{4}{5}{6}|"
+
+OUTPUT_TEMPALTE = """<pre>
+=========
+|{0}|
+|{1}|
+|{2}|
+|{3}|
+|{4}|
+|{5}|
+=========
+</pre>"""
+
 
 class Connect4(object):
     def __init__(self):
@@ -32,10 +42,12 @@ class Connect4(object):
         if self.state == 'NOT_PLAYING':
             return 'Sorry, it doesn\'t look like you\'ve started a game yet?'
 
-        output = TOP_TEMPLATE
+        rows = []
         for i in range(5, -1, -1):
-            output += '<br/>' + ROW_TEMPLATE.format(*[x[i] for x in self.board])
-        output += '<br/>' + TOP_TEMPLATE
+            rows.append(
+                ''.join([x[i] for x in self.board])
+            )
+        output = OUTPUT_TEMPALTE.format(*rows)
 
         # Check if the game is over
         if self.state != 'PLAYING':
