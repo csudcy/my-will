@@ -5,7 +5,7 @@ class GifMeUpScotty(object):
 
     def find(self, search_query):
         data = {
-            "q": search_query + " gif",
+            "q": search_query + " filetype:gif",
             "v": "1.0",
             "safe": "active",
             "rsz": "8"

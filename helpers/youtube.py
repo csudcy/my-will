@@ -12,7 +12,7 @@ class Youtube(object):
             'alt': 'json',
             'racy': 'exclude',
             "max-results": 1,
-            'start-index': random.randint(1, 100)
+            'start-index': random.randint(1, 10)
         }
         if search_query:
             data['q'] = search_query
