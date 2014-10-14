@@ -19,6 +19,7 @@ class Connect4(object):
         # Game variables
         self.state = 'NOT_PLAYING'
         self.board = None
+        self.x_to_play = None
 
     def new_game(self):
         """
@@ -75,6 +76,11 @@ class Connect4(object):
 
         # Check the input
         letter = move[0]
+        if letter == 'X' and self.x_to_play == False:
+            return 'Wait for your turn O!'
+        elif letter == 'O' and self.x_to_play == True:
+            return 'Wait for your turn X!'
+
         number = int(move[1])
         column = self.board[number-1]
         empty_space_index = None
@@ -92,6 +98,12 @@ class Connect4(object):
         if winner:
             self.state = 'NOT PLAYING'
             return self.get_status() + '<br/>Player ' + winner + ' wins!'
+
+        if letter == 'X':
+            self.x_to_play = False
+        elif letter == 'O':
+            self.x_to_play = True
+
         return self.get_status()
 
     def check_four_in_a_row(self, spaces):
@@ -111,7 +123,6 @@ class Connect4(object):
                 count = 0
                 potential_winner = None
         return None
-
 
     def check_board(self):
         #check columns
