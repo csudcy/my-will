@@ -9,7 +9,7 @@ class ImprovedHelpPlugin(WillPlugin):
     @respond_to("^help(?P<search>.*?)$")
     def help(self, message, search):
         """help ___: Search help for ___"""
-        plugin_groups = self.load("help_modules")
+        plugin_groups = self.load("help_modules", default=[])
 
         self.reply(message, 'Sure thing!')
         output = "Here's what I know how to do:"
