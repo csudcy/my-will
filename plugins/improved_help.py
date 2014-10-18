@@ -23,9 +23,7 @@ class ImprovedHelpPlugin(WillPlugin):
         for k in sorted(plugin_groups, key=lambda x: x[0]):
             plugins = plugin_groups[k]
 
-            print plugins
             plugins = [plugin.strip() for plugin in plugins if re.match(search_re, plugin, flags=re.DOTALL)]
-            print plugins
 
             if plugins:
                 output += "<br/><br/><b>%s</b>:" % k

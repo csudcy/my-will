@@ -6,7 +6,7 @@ from will.decorators import respond_to, periodic, hear, randomly, route, rendere
 from helpers.coffee import Coffee
 
 
-class coffeePlugin(WillPlugin):
+class CoffeePlugin(WillPlugin):
 
     def __init__(self, *args, **kwargs):
         self.coffee = Coffee(
@@ -18,12 +18,25 @@ class coffeePlugin(WillPlugin):
     @respond_to("^coffee me$")
     def coffee_me(self, message):
         "coffee me: Show the orders for everyone in the room"
+        users = None
+
+        room = self.get_room_from_message(message)
+        import pprint
+        pprint.pprint(room)
+
         self.reply(message, 'TODO: Get everyone in the room')
+
+        self.reply(
+            message,
+            self.coffee.get_all(
+                users
+            )
+        )
 
     @respond_to("^coffee set (?P<order>.+?)$")
     def coffee_set(self, message, order):
         "coffee set ___: Save ___ as your coffee order"
-        user = message.sender['name']
+        user = message.sender['nick']
         self.reply(
             message,
             self.coffee.set(
@@ -35,7 +48,7 @@ class coffeePlugin(WillPlugin):
     @respond_to("^coffee get$")
     def coffee_get(self, message):
         "coffee get: Show your current coffee order"
-        user = message.sender['name']
+        user = message.sender['nick']
         self.reply(
             message,
             self.coffee.get(
@@ -46,7 +59,7 @@ class coffeePlugin(WillPlugin):
     @respond_to("^coffee clear$")
     def coffee_clear(self, message):
         "coffee clear: Clear your coffee order"
-        user = message.sender['name']
+        user = message.sender['nick']
         self.reply(
             message,
             self.coffee.clear(

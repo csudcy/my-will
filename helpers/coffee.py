@@ -12,8 +12,16 @@ class Coffee(object):
     KEY = 'coffee_orders'
 
     def __init__(self, load, save):
-        self.orders = load(self.KEY, {})
+        self.load = load
         self.save = save
+
+    _orders = None
+    @property
+    def orders(self):
+        if self._orders is None:
+            # Load the orders
+            self._orders = self.load(self.KEY, {})
+        return self._orders
 
     def _save_orders(self):
         self.save(self.KEY, self.orders)
@@ -32,7 +40,7 @@ class Coffee(object):
         return CLEAR
 
     def reset(self):
-        self.orders = {}
+        self.orders.clear()
         self._save_orders()
 
     def get(self, user):
@@ -41,7 +49,9 @@ class Coffee(object):
         order = self.orders[user]
         return GET.format(order=order)
 
-    def get_all(self, users):
+    def get_all(self, users=None):
+        if users is None:
+            users = self.orders.keys()
         orders = []
         unknown_users = []
         for user in users:
@@ -70,6 +80,7 @@ if __name__ == '__main__':
         print 'bob   : ', c_check.get('bob')
         print 'claire: ', c_check.get('claire')
         print c_check.get_all(['alice', 'bob', 'claire'])
+        print c_check.get_all()
         print
 
     c = Coffee(load, save)
