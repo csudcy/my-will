@@ -2,17 +2,16 @@ import requests
 import random
 
 class GifMeUpScotty(object):
-    
+
     def find(self, search_query):
         data = {
-            'q': search_query,
+            'tag': search_query.replace(' ', '+'),
             'api_key': 'dc6zaTOxFJmzC'
         }
-        
-        r = requests.get("http://api.giphy.com/v1/gifs/search", params=data)
+
+        r = requests.get("http://api.giphy.com/v1/gifs/random", params=data)
         results = r.json()['data']
-        
-        return None if not results else random.choice(results)['images']['original']['url']
+        return None if not results else results['image_original_url']
 
 
 if __name__ == '__main__':
