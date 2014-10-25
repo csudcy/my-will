@@ -4,6 +4,7 @@ from will.plugin import WillPlugin
 from will.decorators import respond_to, periodic, hear, randomly, route, rendered_template, require_settings
 
 from helpers.coffee import Coffee
+import settings
 
 
 class CoffeePlugin(WillPlugin):
@@ -11,25 +12,27 @@ class CoffeePlugin(WillPlugin):
     def __init__(self, *args, **kwargs):
         self.coffee = Coffee(
             self.load,
-            self.save
+            self.save,
+            settings.HIPCHAT_SERVER,
+            settings.V2_TOKEN,
         )
         return WillPlugin.__init__(self, *args, **kwargs)
 
     @respond_to("^coffee me$")
     def coffee_me(self, message):
         "coffee me: Show the orders for everyone in the room"
-        users = None
-
+        # Try to get the room from the mesage
         room = self.get_room_from_message(message)
-        import pprint
-        pprint.pprint(room)
+        if not room:
+            # This is a pm
+            return self.coffee_get(message)
 
-        self.reply(message, 'TODO: Get everyone in the room')
+        room_id = room['room_id']
 
         self.reply(
             message,
             self.coffee.get_all(
-                users
+                room_id
             )
         )
 
@@ -65,6 +68,14 @@ class CoffeePlugin(WillPlugin):
             self.coffee.clear(
                 user
             )
+        )
+
+    @respond_to("^coffee all$")
+    def coffee_reset(self, message):
+        "coffee all: Show all existing coffee orders"
+        self.reply(
+            message,
+            self.coffee.get_all()
         )
 
     @respond_to("^coffee RESET$")

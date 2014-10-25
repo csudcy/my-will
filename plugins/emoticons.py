@@ -12,7 +12,7 @@ class EmoticonPlugin(WillPlugin):
     def __init__(self, *args, **kwargs):
         self.emoticons = HipchatEmoticons(
             settings.HIPCHAT_SERVER,
-            settings.V2_TOKEN
+            settings.V2_TOKEN,
         )
         return WillPlugin.__init__(self, *args, **kwargs)
 

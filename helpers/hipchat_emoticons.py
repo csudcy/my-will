@@ -5,17 +5,17 @@ from memoize import Memoizer
 import requests
 
 
-EMOTICONS_URL = "https://%(server)s/v2/emoticon?max-results=1000&auth_token=%(token)s"
+EMOTICONS_URL = "https://{server}/v2/emoticon?max-results=1000&auth_token={token}"
 
 store = {}
 memo = Memoizer(store)
 
 class HipchatEmoticons(object):
     def __init__(self, server, token):
-        self.url = EMOTICONS_URL % {
-            "server": server,
-            "token": token
-        }
+        self.url = EMOTICONS_URL.format(
+            server=server,
+            token=token,
+        )
 
     @memo(max_age=12*60*60)
     def get_emoticon_list(self):
@@ -25,6 +25,8 @@ class HipchatEmoticons(object):
         headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
         response = requests.get(self.url, headers=headers)
         data = response.json()
+        if 'error' in data:
+            raise Exception('Hipchat error: %s' % data['error']['message'])
         return data['items']
 
     def find(self, search=None):
