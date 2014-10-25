@@ -11,7 +11,7 @@ class QuestPlugin(WillPlugin):
         if quest.status == 'ended':
             response =  quest.start_quest(message.sender.nick)
             self.reply(message, response)
-        else: 
+        else:
             self.reply(message, "Sorry, {0} a quest is already in progress".format(message.sender.nick))
 
     @respond_to("^join$")

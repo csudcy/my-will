@@ -26,7 +26,7 @@ class Youtube(object):
 
         # Return the full URL
         id = result.split(':')[-1]
-        return 'http://www.youtube.com/v/{id}?autoplay=1'.format(id=id)
+        return 'https://www.youtube.com/embed/{id}?autoplay=1'.format(id=id)
 
 if __name__ == '__main__':
     yt = Youtube()

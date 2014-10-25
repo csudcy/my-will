@@ -56,7 +56,7 @@ class Quest(object):
             return False
 
     def user_in_quest(self, name):
-        if name in self.users: 
+        if name in self.users:
             return True
         else:
             return False
@@ -90,7 +90,7 @@ class Quest(object):
         if json.dumps(next_move) in self.dungeon_map.keys():
             self.coordinates = next_move
             return self.before_return(self.dungeon_map[json.dumps(next_move)]['description'], False)
-        else: 
+        else:
             return self.before_return('Sorry {0}, but you can\'t move there'.format(message.sender.nick), False)
 
     def use(self, entry):
@@ -103,7 +103,7 @@ class Quest(object):
                     del item
                     return self.before_return('You successfully used {0} in conjunction with {1}, causing {2}'.format(item['name'], item['use'], response), True)
             #        return self.before_return('Sorry you can\'t use {0} like that'.format(item), True)
-                    
+
         return self.before_return('Sorry you don\'t have that item', True)
 
     def attack(self, entry):
@@ -112,7 +112,7 @@ class Quest(object):
             if monster['name'] in str(entry).lower():
                 print 'attacking {0}'.format(monster['name'])
                 return self.attack_monster(monster)
-    
+
         return self.before_return('There are no monsters of that name', True)
 
     def pick_up(self, entry):
@@ -164,7 +164,7 @@ class Quest(object):
                 del monster
                 return self.before_return('You killed the {0}, you absolute bastard. He had wife and children'.format(monster['name']), True)
             return self.before_return('The {0} took {1} damage'.format(monster['name'], monster['power']), True)
-        else: 
+        else:
             return self.before_return('You missed', True)
 
 quest = Quest()
@@ -174,7 +174,7 @@ class TestObject(object):
 
 if __name__ == '__main__':
     message = TestObject()
-    setattr(message, 'sender', TestObject())    
+    setattr(message, 'sender', TestObject())
     message.sender.nick = 'Test'
     print quest.pick_up('RedBull')
     print quest.move_north(message)
