@@ -49,7 +49,7 @@
 PLUGINS = [
     # Built-ins
     "will.plugins.admin",
-    "will.plugins.chat_room",
+    #"will.plugins.chat_room",
     #"will.plugins.devops",
     "will.plugins.friendly",
     #"will.plugins.help",
