@@ -71,7 +71,7 @@ class CoffeePlugin(WillPlugin):
         )
 
     @respond_to("^coffee all$")
-    def coffee_reset(self, message):
+    def coffee_all(self, message):
         "coffee all: Show all existing coffee orders"
         self.reply(
             message,
