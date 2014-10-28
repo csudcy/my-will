@@ -5,7 +5,7 @@ class GifMeUpScotty(object):
 
     def find(self, search_query):
         data = {
-            'tag': search_query.replace(' ', '+'),
+            'tag': search_query,
             'api_key': 'dc6zaTOxFJmzC'
         }
 
