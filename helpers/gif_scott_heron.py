@@ -10,7 +10,7 @@ class GifMeUpScotty(object):
         }
 
         r = requests.get("http://api.giphy.com/v1/gifs/random", params=data)
-        results = r.json()['data'] if r.status_code == 200 else None
+        results = r.json()['data'] if r.status_code == 200 else {'image_original_url': 'GIPHY API IS BORKED'}
         return None if not results else results['image_original_url']
 
 
