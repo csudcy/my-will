@@ -11,7 +11,7 @@ class GifPlugin(WillPlugin):
         return WillPlugin.__init__(self, *args, **kwargs)
 
     @respond_to('gif me(?P<search_query>.*)$')
-    def youtube_me(self, message, search_query):
+    def gif_me(self, message, search_query):
         """gif me ___ : Search google imaghes for ___, and post a random gif."""
 
         result = self.gmus.find(search_query.strip())
