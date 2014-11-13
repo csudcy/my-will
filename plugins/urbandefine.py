@@ -9,7 +9,7 @@ class UrbanDefinePlugin(WillPlugin):
         self.dictionary = UrbanDictionary()
         return WillPlugin.__init__(self, *args, **kwargs)
 
-    @respond_to("^slang (?P<word>[a-zA-Z]+)$")
+    @respond_to("^slang (?P<word>[a-zA-Z\s]+)$")
     def slang(self, message, word):
         """
         slang ___: Get the definition of a slang
