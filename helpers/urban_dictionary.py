@@ -9,7 +9,7 @@ class UrbanDictionary(object):
         defn = req.json()
         if 'message' in defn:
             return "That's not slang fool!"
-        return "%s: %s" % (defn['term'], defn['definition'])
+        return "%s: %s\nUsage: %s" % (defn['term'], defn['definition'], defn['example'])
 
 if __name__ == '__main__':
     dm = UrbanDictionary()
