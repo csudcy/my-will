@@ -25,6 +25,7 @@ TODO:
   * Wikipedia
   * XKCD
   * Dilbert
+  * Nutscapes
  * Basic responders:
   * War games
   * Word of the day
